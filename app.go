@@ -93,6 +93,7 @@ func (s *App) AccessToken(shop string, code string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer response.Body.Close()
 
 	token := map[string]string{}
 	err = json.NewDecoder(response.Body).Decode(&token)
