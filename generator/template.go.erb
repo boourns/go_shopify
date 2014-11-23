@@ -1,0 +1,18 @@
+package shopify
+
+import (
+  <% imports.each do |i| %>
+    "<%= i %>"
+  <% end %>
+)
+
+type <%= @name %> struct {
+  <% @properties.each do |p| %>
+    <%= p.name.camelize %> <%= p.go_type %> `json:<%= p.name %>`
+  <% end %>
+}
+
+<% @actions.each do |action| %>
+<%= action.render %>
+<% end %>
+
