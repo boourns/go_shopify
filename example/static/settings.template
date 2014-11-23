@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Embedded App</title>
+    <script src="//cdn.shopify.com/s/assets/external/app.js"></script>
+    <script type="text/javascript">
+      url = new URL(document.URL)
+
+      ShopifyApp.init({
+        apiKey: "{{.APIKey}}",
+        shopOrigin: "{{.Shop}}",
+        debug: true
+      });
+    </script>
+  </head>
+  <body>
+    Embedded app from golang!
+  </body>
+</html>
