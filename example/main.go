@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-var appl *shopify.App
+var app *shopify.App
 
 // Change these to actual secret keys before use
 var store = sessions.NewCookieStore([]byte("this-is-a-dummy-authentication-key32"), []byte("this-is-a-dummy-encryption-key32"))
@@ -39,7 +39,7 @@ func init() {
 	}
 
 	// use ngrok to test an embedded app with HTTPS
-	appl = &shopify.App{
+	app = &shopify.App{
 		RedirectURI: redirect,
 		APIKey:      key,
 		APISecret:   secret,
@@ -71,7 +71,7 @@ func serveInstall(w http.ResponseWriter, r *http.Request) {
 	} else if len(params["code"]) == 1 {
 
 		// auth callback from shopify
-		if appl.CheckSignature(r.URL) != true {
+		if app.CheckSignature(r.URL) != true {
 			http.Error(w, "Invalid signature", 401)
 			log.Printf("Invalid signature from Shopify")
 			return
@@ -84,7 +84,7 @@ func serveInstall(w http.ResponseWriter, r *http.Request) {
 		}
 
 		shop := params["shop"][0]
-		token, _ := appl.AccessToken(shop, params["code"][0])
+		token, _ := app.AccessToken(shop, params["code"][0])
 
 		// persist this token
 		tokens[shop] = token
@@ -106,7 +106,7 @@ func serveInstall(w http.ResponseWriter, r *http.Request) {
 		shop := params["install_shop"][0]
 		log.Printf("starting oauth flow")
 
-		http.Redirect(w, r, appl.AuthorizeURL(shop, "read_themes,write_themes"), 302)
+		http.Redirect(w, r, app.AuthorizeURL(shop, "read_themes,write_themes"), 302)
 	}
 }
 
@@ -116,7 +116,7 @@ func serveAdmin(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
 
 	// signed request from Shopify?
-	if appl.CheckSignature(r.URL) {
+	if app.CheckSignature(r.URL) {
 		log.Printf("signed request!")
 		session.Values["current_shop"] = params["shop"][0]
 		session.Save(r, w)
@@ -131,7 +131,7 @@ func serveAdmin(w http.ResponseWriter, r *http.Request) {
 
 	// if we don't have an access token for the shop, obtain one now.
 	if _, ok := tokens[shop]; !ok {
-		http.Redirect(w, r, appl.AuthorizeURL(shop, "read_themes,write_themes"), 302)
+		http.Redirect(w, r, app.AuthorizeURL(shop, "read_themes,write_themes"), 302)
 		return
 	}
 
