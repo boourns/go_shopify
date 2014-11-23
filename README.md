@@ -7,10 +7,10 @@ Done
 ====
 - App install flow (see example/main.go)
 - Check signatures for requests coming from Shopify
+- store session for users
+- store API keys for installed shops
 
 TODO
 ====
-- store session for users
-- store API keys for installed shops
-- render embedded app page as template
+- json load settings and initialize embedded app in page
 - API client
