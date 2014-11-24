@@ -2,7 +2,9 @@ package shopify
 
 import (
 	"bytes"
+	"crypto/hmac"
 	"crypto/md5"
+	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/hex"
 	"encoding/json"
@@ -32,20 +34,34 @@ func (s *App) AuthorizeURL(shop string, scopes string) string {
 	return u.String()
 }
 
-func (s *App) CheckSignature(u *url.URL) bool {
+func (s *App) AdminSignatureOk(u *url.URL) bool {
 	params := u.Query()
 	signature := params["signature"]
 	if signature == nil || len(signature) != 1 {
 		return false
 	}
 
-	raw := md5.Sum([]byte(s.signatureString(u)))
+	raw := md5.Sum([]byte(s.signatureString(u, true)))
 	encrypted := hex.EncodeToString(raw[:])
 
 	return 1 == subtle.ConstantTimeCompare([]byte(encrypted), []byte(signature[0]))
 }
 
-func (s *App) signatureString(u *url.URL) string {
+func (s *App) AppProxySignatureOk(u *url.URL) bool {
+	params := u.Query()
+	signature := params["signature"]
+	if signature == nil || len(signature) != 1 {
+		return false
+	}
+
+	mac := hmac.New(sha256.New, []byte(s.APISecret))
+	mac.Write([]byte(s.signatureString(u, false)))
+	calculated := hex.EncodeToString(mac.Sum(nil))
+
+	return 1 == subtle.ConstantTimeCompare([]byte(signature[0]), []byte(calculated))
+}
+
+func (s *App) signatureString(u *url.URL, prependSig bool) string {
 	params := u.Query()
 
 	keys := []string{}
@@ -56,7 +72,10 @@ func (s *App) signatureString(u *url.URL) string {
 	}
 	sort.Strings(keys)
 
-	input := s.APISecret
+	input := ""
+	if prependSig {
+		input = s.APISecret
+	}
 	for _, k := range keys {
 		input = fmt.Sprintf("%s%s=%s", input, k, params[k][0])
 	}

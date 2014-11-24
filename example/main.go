@@ -71,7 +71,7 @@ func serveInstall(w http.ResponseWriter, r *http.Request) {
 	} else if len(params["code"]) == 1 {
 
 		// auth callback from shopify
-		if app.CheckSignature(r.URL) != true {
+		if app.AdminSignatureOk(r.URL) != true {
 			http.Error(w, "Invalid signature", 401)
 			log.Printf("Invalid signature from Shopify")
 			return
@@ -110,13 +110,21 @@ func serveInstall(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func serveAppProxy(w http.ResponseWriter, r *http.Request) {
+	if app.AppProxySignatureOk(r.URL) {
+		http.ServeFile(w, r, "static/app_proxy.html")
+	} else {
+		http.Error(w, "Unauthorized", 401)
+	}
+}
+
 // initial page served when visited as embedded app inside Shopify admin
 func serveAdmin(w http.ResponseWriter, r *http.Request) {
 	session := getSession(r)
 	params := r.URL.Query()
 
 	// signed request from Shopify?
-	if app.CheckSignature(r.URL) {
+	if app.AdminSignatureOk(r.URL) {
 		log.Printf("signed request!")
 		session.Values["current_shop"] = params["shop"][0]
 		session.Save(r, w)
@@ -142,6 +150,7 @@ func serveAdmin(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/install", serveInstall)
 	http.HandleFunc("/admin", serveAdmin)
+	http.HandleFunc("/app_proxy/", serveAppProxy)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/home.html")

@@ -25,15 +25,27 @@ func TestSignatureString(t *testing.T) {
 	u, _ := url.Parse("https://app.com/?shop=burnsmod.myshopify.com&code=asdf&timestamp=1337178173&signature=31b9fcfbd98a3650b8523bcc92f8c5d2")
 	expected := "1234code=asdfshop=burnsmod.myshopify.comtimestamp=1337178173"
 
-	if output := app.signatureString(u); output != expected {
+	if output := app.signatureString(u, true); output != expected {
+		t.Errorf("expected %s output %s", expected, output)
+	}
+
+	if output := app.signatureString(u, false); output != "code=asdfshop=burnsmod.myshopify.comtimestamp=1337178173" {
 		t.Errorf("expected %s output %s", expected, output)
 	}
 }
 
-func TestSignature(t *testing.T) {
+func TestAdminSignatureOk(t *testing.T) {
 	u, _ := url.Parse("https://app.com/?shop=burnsmod.myshopify.com&code=asdf&timestamp=1337178173&signature=bd28a1a098688d8937e991aef3bc80ab")
 
-	if app.CheckSignature(u) != true {
+	if app.AdminSignatureOk(u) != true {
+		t.Errorf("signature checking failed")
+	}
+}
+
+func TestAppProxySignatureOk(t *testing.T) {
+	u, _ := url.Parse("https://app.com/?shop=burnsmod.myshopify.com&code=asdf&timestamp=1337178173&signature=6be68200c0175f0f28c9246c9c6fa1cc152e119be597d5df1ea950106c25bf7f")
+
+	if app.AppProxySignatureOk(u) != true {
 		t.Errorf("signature checking failed")
 	}
 }
