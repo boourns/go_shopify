@@ -6,7 +6,7 @@ Shopify API client & app helper in Go
 Done
 ====
 - App install flow (see example/main.go)
-- Check signatures for requests coming from Shopify
+- Check signatures for admin and API proxy requests coming from Shopify
 - store session for users
 - store API keys for installed shops
 
