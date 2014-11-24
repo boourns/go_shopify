@@ -3,8 +3,17 @@
   <head>
     <title>Embedded App</title>
     <script src="//cdn.shopify.com/s/assets/external/app.js"></script>
+    <script type="text/javascript">
+      ShopifyApp.init({
+        apiKey: "{{.APIKey}}",
+        shopOrigin: "https://{{.Shop}}",
+        debug: true
+        });
+      ShopifyApp.Bar.loadingOff()
+    </script>
+
   </head>
   <body>
-    Embedded app from golang!
+    Embedded app from golang!, welcome {{.Shop}}
   </body>
 </html>

@@ -5,6 +5,7 @@ import (
 	"github.com/boourns/go_shopify"
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -144,7 +145,14 @@ func serveAdmin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// they're logged in
-	http.ServeFile(w, r, "static/admin.html")
+	type AdminVars struct {
+		Shop   string
+		APIKey string
+	}
+	v := AdminVars{Shop: shop, APIKey: app.APIKey}
+
+	t, _ := template.ParseFiles("static/admin.html")
+	t.Execute(w, v)
 }
 
 func main() {
