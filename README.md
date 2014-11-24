@@ -12,5 +12,4 @@ Done
 
 TODO
 ====
-- json load settings and initialize embedded app in page
 - API client
