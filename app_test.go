@@ -49,3 +49,18 @@ func TestAppProxySignatureOk(t *testing.T) {
 		t.Errorf("signature checking failed")
 	}
 }
+
+func TestIgnoreSignature(t *testing.T) {
+
+	a := App{APIKey: "asdf", APISecret: "1234", RedirectURI: "http://localhost:4000", IgnoreSignature: true}
+
+	u, _ := url.Parse("https://app.com/?shop=burnsmod.myshopify.com&code=asdf&timestamp=1337178173&signature=ffff")
+
+	if a.AdminSignatureOk(u) != true {
+		t.Errorf("IgnoreSignature didn't work for Admin")
+	}
+
+	if a.AppProxySignatureOk(u) != true {
+		t.Errorf("IgnoreSignature didn't work for AppProxy")
+	}
+}

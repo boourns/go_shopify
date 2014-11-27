@@ -15,9 +15,10 @@ import (
 )
 
 type App struct {
-	APIKey      string
-	APISecret   string
-	RedirectURI string
+	APIKey          string
+	APISecret       string
+	RedirectURI     string
+	IgnoreSignature bool
 }
 
 func (s *App) AuthorizeURL(shop string, scopes string) string {
@@ -35,6 +36,10 @@ func (s *App) AuthorizeURL(shop string, scopes string) string {
 }
 
 func (s *App) AdminSignatureOk(u *url.URL) bool {
+	if s.IgnoreSignature {
+		return true
+	}
+
 	params := u.Query()
 	signature := params["signature"]
 	if signature == nil || len(signature) != 1 {
@@ -48,6 +53,10 @@ func (s *App) AdminSignatureOk(u *url.URL) bool {
 }
 
 func (s *App) AppProxySignatureOk(u *url.URL) bool {
+	if s.IgnoreSignature {
+		return true
+	}
+
 	params := u.Query()
 	signature := params["signature"]
 	if signature == nil || len(signature) != 1 {
