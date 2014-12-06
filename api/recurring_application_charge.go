@@ -87,7 +87,7 @@ func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, er
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["recurring_application_charge"]
 
 	if err != nil {
 		return nil, err

@@ -57,7 +57,7 @@ func (api *API) CustomerAddresses() (*[]CustomerAddress, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["customer_address"]
 
 	if err != nil {
 		return nil, err

@@ -57,7 +57,7 @@ func (api *API) Users() (*[]User, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["user"]
 
 	if err != nil {
 		return nil, err

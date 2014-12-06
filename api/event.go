@@ -51,7 +51,7 @@ func (api *API) Events() (*[]Event, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["event"]
 
 	if err != nil {
 		return nil, err

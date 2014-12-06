@@ -45,7 +45,7 @@ func (api *API) Themes() (*[]Theme, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["theme"]
 
 	if err != nil {
 		return nil, err

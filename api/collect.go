@@ -51,7 +51,7 @@ func (api *API) Collects() (*[]Collect, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["collect"]
 
 	if err != nil {
 		return nil, err

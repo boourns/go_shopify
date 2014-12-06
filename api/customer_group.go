@@ -41,7 +41,7 @@ func (api *API) CustomerGroups() (*[]CustomerGroup, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["customer_group"]
 
 	if err != nil {
 		return nil, err

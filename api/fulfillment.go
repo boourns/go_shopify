@@ -53,7 +53,7 @@ func (api *API) Fulfillments() (*[]Fulfillment, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["fulfillment"]
 
 	if err != nil {
 		return nil, err

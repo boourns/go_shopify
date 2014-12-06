@@ -41,7 +41,7 @@ func (api *API) CustomerSavedSearches() (*[]CustomerSavedSearch, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["customer_saved_search"]
 
 	if err != nil {
 		return nil, err

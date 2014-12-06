@@ -55,7 +55,7 @@ func (api *API) CustomCollections() (*[]CustomCollection, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["custom_collection"]
 
 	if err != nil {
 		return nil, err

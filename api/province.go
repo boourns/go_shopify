@@ -45,7 +45,7 @@ func (api *API) Provinces() (*[]Province, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["province"]
 
 	if err != nil {
 		return nil, err

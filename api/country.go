@@ -45,7 +45,7 @@ func (api *API) Countries() (*[]Country, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["country"]
 
 	if err != nil {
 		return nil, err

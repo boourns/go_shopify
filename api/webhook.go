@@ -47,7 +47,7 @@ func (api *API) Webhooks() (*[]Webhook, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["webhook"]
 
 	if err != nil {
 		return nil, err

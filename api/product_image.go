@@ -45,7 +45,7 @@ func (api *API) ProductImages() (*[]ProductImage, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["product_image"]
 
 	if err != nil {
 		return nil, err

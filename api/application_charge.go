@@ -79,7 +79,7 @@ func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["application_charge"]
 
 	if err != nil {
 		return nil, err

@@ -53,7 +53,7 @@ func (api *API) Pages() (*[]Page, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["page"]
 
 	if err != nil {
 		return nil, err

@@ -59,7 +59,7 @@ func (api *API) Articles() (*[]Article, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["article"]
 
 	if err != nil {
 		return nil, err

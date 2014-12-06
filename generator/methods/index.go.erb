@@ -14,7 +14,7 @@ func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["<%= @klass.name.underscore %>"]
 
 	if err != nil {
 		return nil, err

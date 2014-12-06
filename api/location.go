@@ -55,7 +55,7 @@ func (api *API) Locations() (*[]Location, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["location"]
 
 	if err != nil {
 		return nil, err

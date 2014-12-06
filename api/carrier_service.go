@@ -43,7 +43,7 @@ func (api *API) CarrierServices() (*[]CarrierService, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["carrier_service"]
 
 	if err != nil {
 		return nil, err

@@ -75,7 +75,7 @@ func (api *API) ProductVariants() (*[]ProductVariant, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["product_variant"]
 
 	if err != nil {
 		return nil, err

@@ -57,7 +57,7 @@ func (api *API) Comments() (*[]Comment, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["comment"]
 
 	if err != nil {
 		return nil, err

@@ -41,7 +41,7 @@ func (api *API) ScriptTags() (*[]ScriptTag, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["products"]
+  result := (*r)["script_tag"]
 
 	if err != nil {
 		return nil, err
