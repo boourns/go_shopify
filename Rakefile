@@ -24,7 +24,7 @@ task :generate do |t|
 
   schema = JSON::parse(File.read("./data/api_schema.json"))
 
-  Generator.api_classes = schema.map { |klass| klass["name"] }.sort
+  Generator.api_classes = schema.map { |klass| klass["name"].gsub(' ', '') }.sort
 
   schema.each do |klass|
     name = klass["name"]

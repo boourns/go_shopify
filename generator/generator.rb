@@ -28,7 +28,6 @@ class Generator
     def go_type
       example = @prop["examples"][0].values[0] if @prop["examples"][0]
       example = @instance || example
-      return "string" if example.nil?
 
       return type_for(example)
     end

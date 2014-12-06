@@ -38,7 +38,7 @@ type Product struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
-    Variants []interface{} `json:"variants"`
+    Variants []ProductVariant `json:"variants"`
   
     Vendor string `json:"vendor"`
   

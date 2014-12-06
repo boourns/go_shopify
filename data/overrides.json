@@ -4,5 +4,8 @@
   "type/Country::WeightBasedShippingRate": "string",
   "type/BillingAddress": "CustomerAddress",
   "type/Address": "CustomerAddress",
-  "type/ShippingAddress": "CustomerAddress"
+  "type/ShippingAddress": "CustomerAddress",
+  "type/Variant": "ProductVariant",
+  "type/Image": "ProductImage"
+
 }
