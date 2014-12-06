@@ -6,34 +6,36 @@ import (
   
     "fmt"
   
+    "time"
+  
 )
 
 type Collect struct {
   
-    CollectionId int64 `json:collection_id`
+    CollectionId int64 `json:"collection_id"`
   
-    CreatedAt string `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Featured string `json:featured`
+    Featured string `json:"featured"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    Position string `json:position`
+    Position int64 `json:"position"`
   
-    ProductId int64 `json:product_id`
+    ProductId int64 `json:"product_id"`
   
-    SortValue string `json:sort_value`
+    SortValue string `json:"sort_value"`
   
-    UpdatedAt string `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-// TODO implement Collect.create
 
-// TODO implement Collect.destroy
 
-func (api *API) Collect_index() (*[]Collect, error) {
+
+
+func (api *API) Collects() (*[]Collect, error) {
   res, status, err := api.request("/admin/collects.json", "GET", nil)
 
   if err != nil {
@@ -59,8 +61,34 @@ func (api *API) Collect_index() (*[]Collect, error) {
 }
 
 
-// TODO implement Collect.count
 
-// TODO implement Collect.show
+
+func (api *API) Collect(id int64) (*Collect, error) {
+  endpoint := fmt.Sprintf("/admin/collects/%d.json", id)
+
+  res, status, err := api.request(endpoint, "GET", nil)
+
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]Collect{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["collect"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
 
 

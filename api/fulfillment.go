@@ -12,32 +12,32 @@ import (
 
 type Fulfillment struct {
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    LineItems int64 `json:line_items`
+    LineItems int64 `json:"line_items"`
   
-    OrderId int64 `json:order_id`
+    OrderId int64 `json:"order_id"`
   
-    Receipt string `json:receipt`
+    Receipt string `json:"receipt"`
   
-    Status string `json:status`
+    Status string `json:"status"`
   
-    TrackingCompany string `json:tracking_company`
+    TrackingCompany string `json:"tracking_company"`
   
-    TrackingNumbers string `json:tracking_numbers`
+    TrackingNumbers []string `json:"tracking_numbers"`
   
-    TrackingUrls string `json:tracking_urls`
+    TrackingUrls []string `json:"tracking_urls"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
-    VariantInventoryManagement string `json:variant_inventory_management`
+    VariantInventoryManagement string `json:"variant_inventory_management"`
   
 }
 
 
-func (api *API) Fulfillment_index() (*[]Fulfillment, error) {
+func (api *API) Fulfillments() (*[]Fulfillment, error) {
   res, status, err := api.request("/admin/fulfillments.json", "GET", nil)
 
   if err != nil {
@@ -63,16 +63,42 @@ func (api *API) Fulfillment_index() (*[]Fulfillment, error) {
 }
 
 
-// TODO implement Fulfillment.count
 
-// TODO implement Fulfillment.show
 
-// TODO implement Fulfillment.create
+func (api *API) Fulfillment(id int64) (*Fulfillment, error) {
+  endpoint := fmt.Sprintf("/admin/fulfillments/%d.json", id)
 
-// TODO implement Fulfillment.update
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement Fulfillment.complete
+  if err != nil {
+    return nil, err
+  }
 
-// TODO implement Fulfillment.cancel
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]Fulfillment{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["fulfillment"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
+
+
 
 

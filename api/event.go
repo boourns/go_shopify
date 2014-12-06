@@ -12,30 +12,30 @@ import (
 
 type Event struct {
   
-    Arguments string `json:arguments`
+    Arguments []string `json:"arguments"`
   
-    Body string `json:body`
+    Body string `json:"body"`
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Id string `json:id`
+    Id int64 `json:"id"`
   
-    Description string `json:description`
+    Description string `json:"description"`
   
-    Path string `json:path`
+    Path string `json:"path"`
   
-    Message string `json:message`
+    Message string `json:"message"`
   
-    SubjectId string `json:subject_id`
+    SubjectId int64 `json:"subject_id"`
   
-    SubjectType string `json:subject_type`
+    SubjectType string `json:"subject_type"`
   
-    Verb string `json:verb`
+    Verb string `json:"verb"`
   
 }
 
 
-func (api *API) Event_index() (*[]Event, error) {
+func (api *API) Events() (*[]Event, error) {
   res, status, err := api.request("/admin/events.json", "GET", nil)
 
   if err != nil {
@@ -61,8 +61,34 @@ func (api *API) Event_index() (*[]Event, error) {
 }
 
 
-// TODO implement Event.show
+func (api *API) Event(id int64) (*Event, error) {
+  endpoint := fmt.Sprintf("/admin/events/%d.json", id)
 
-// TODO implement Event.count
+  res, status, err := api.request(endpoint, "GET", nil)
+
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]Event{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["event"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
 
 

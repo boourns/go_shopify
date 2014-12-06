@@ -12,34 +12,34 @@ import (
 
 type CustomCollection struct {
   
-    BodyHtml string `json:body_html`
+    BodyHtml string `json:"body_html"`
   
-    Handle string `json:handle`
+    Handle string `json:"handle"`
   
-    Image string `json:image`
+    Image string `json:"image"`
   
-    Id string `json:id`
+    Id int64 `json:"id"`
   
-    Metafield string `json:metafield`
+    Metafield string `json:"metafield"`
   
-    Published string `json:published`
+    Published string `json:"published"`
   
-    PublishedAt time.Time `json:published_at`
+    PublishedAt time.Time `json:"published_at"`
   
-    PublishedScope string `json:published_scope`
+    PublishedScope string `json:"published_scope"`
   
-    SortOrder string `json:sort_order`
+    SortOrder string `json:"sort_order"`
   
-    TemplateSuffix string `json:template_suffix`
+    TemplateSuffix string `json:"template_suffix"`
   
-    Title string `json:title`
+    Title string `json:"title"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-func (api *API) CustomCollection_index() (*[]CustomCollection, error) {
+func (api *API) CustomCollections() (*[]CustomCollection, error) {
   res, status, err := api.request("/admin/custom_collections.json", "GET", nil)
 
   if err != nil {
@@ -65,14 +65,40 @@ func (api *API) CustomCollection_index() (*[]CustomCollection, error) {
 }
 
 
-// TODO implement CustomCollection.count
 
-// TODO implement CustomCollection.show
 
-// TODO implement CustomCollection.create
+func (api *API) CustomCollection(id int64) (*CustomCollection, error) {
+  endpoint := fmt.Sprintf("/admin/custom_collections/%d.json", id)
 
-// TODO implement CustomCollection.update
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement CustomCollection.destroy
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]CustomCollection{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["custom_collection"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
 
 

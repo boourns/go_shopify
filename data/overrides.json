@@ -1,0 +1,8 @@
+{
+  "type/Order::ClientDetails": "map[string]string",
+  "type/Customer::DefaultAddress": "Address",
+  "type/Country::WeightBasedShippingRate": "string",
+  "type/BillingAddress": "CustomerAddress",
+  "type/Address": "CustomerAddress",
+  "type/ShippingAddress": "CustomerAddress"
+}

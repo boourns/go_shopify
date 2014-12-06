@@ -12,36 +12,36 @@ import (
 
 type Comment struct {
   
-    ArticleId int64 `json:article_id`
+    ArticleId int64 `json:"article_id"`
   
-    Author string `json:author`
+    Author string `json:"author"`
   
-    BlogId int64 `json:blog_id`
+    BlogId int64 `json:"blog_id"`
   
-    Body string `json:body`
+    Body string `json:"body"`
   
-    BodyHtml string `json:body_html`
+    BodyHtml string `json:"body_html"`
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Email string `json:email`
+    Email string `json:"email"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    Ip string `json:ip`
+    Ip string `json:"ip"`
   
-    PublishedAt time.Time `json:published_at`
+    PublishedAt time.Time `json:"published_at"`
   
-    Status string `json:status`
+    Status string `json:"status"`
   
-    UpdatedAt string `json:updated_at`
+    UpdatedAt string `json:"updated_at"`
   
-    UserAgent string `json:user_agent`
+    UserAgent string `json:"user_agent"`
   
 }
 
 
-func (api *API) Comment_index() (*[]Comment, error) {
+func (api *API) Comments() (*[]Comment, error) {
   res, status, err := api.request("/admin/comments.json", "GET", nil)
 
   if err != nil {
@@ -67,22 +67,48 @@ func (api *API) Comment_index() (*[]Comment, error) {
 }
 
 
-// TODO implement Comment.count
 
-// TODO implement Comment.show
 
-// TODO implement Comment.create
+func (api *API) Comment(id int64) (*Comment, error) {
+  endpoint := fmt.Sprintf("/admin/comments/%d.json", id)
 
-// TODO implement Comment.update
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement Comment.spam
+  if err != nil {
+    return nil, err
+  }
 
-// TODO implement Comment.not_spam
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
 
-// TODO implement Comment.approve
+  r := map[string]Comment{}
+  err = json.NewDecoder(res).Decode(&r)
 
-// TODO implement Comment.remove
+  fmt.Printf("things are: %v\n\n", r)
 
-// TODO implement Comment.restore
+  result := r["comment"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

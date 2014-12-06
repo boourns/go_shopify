@@ -10,38 +10,38 @@ import (
 
 type User struct {
   
-    AccountOwner string `json:account_owner`
+    AccountOwner string `json:"account_owner"`
   
-    Bio string `json:bio`
+    Bio string `json:"bio"`
   
-    Email string `json:email`
+    Email string `json:"email"`
   
-    FirstName string `json:first_name`
+    FirstName string `json:"first_name"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    Im string `json:im`
+    Im string `json:"im"`
   
-    LastName string `json:last_name`
+    LastName string `json:"last_name"`
   
-    Permissions string `json:permissions`
+    Permissions []string `json:"permissions"`
   
-    Phone string `json:phone`
+    Phone string `json:"phone"`
   
-    Pin string `json:pin`
+    Pin string `json:"pin"`
   
-    ReceiveAnnouncements int64 `json:receive_announcements`
+    ReceiveAnnouncements int64 `json:"receive_announcements"`
   
-    ScreenName string `json:screen_name`
+    ScreenName string `json:"screen_name"`
   
-    Url string `json:url`
+    Url string `json:"url"`
   
-    UserType string `json:user_type`
+    UserType string `json:"user_type"`
   
 }
 
 
-func (api *API) User_index() (*[]User, error) {
+func (api *API) Users() (*[]User, error) {
   res, status, err := api.request("/admin/users.json", "GET", nil)
 
   if err != nil {
@@ -67,6 +67,32 @@ func (api *API) User_index() (*[]User, error) {
 }
 
 
-// TODO implement User.show
+func (api *API) User(id int64) (*User, error) {
+  endpoint := fmt.Sprintf("/admin/users/%d.json", id)
+
+  res, status, err := api.request(endpoint, "GET", nil)
+
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]User{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["user"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
 
 

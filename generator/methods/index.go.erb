@@ -1,5 +1,5 @@
-func (api *API) <%= @klass.name %>_<%= @name %>() (*[]<%= @klass.name %>, error) {
-  res, status, err := api.request("<%= endpoint %>", "<%= method %>", nil)
+func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
+  res, status, err := api.request("<%= endpoint %>.json", "GET", nil)
 
   if err != nil {
     return nil, err

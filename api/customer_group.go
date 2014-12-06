@@ -12,20 +12,20 @@ import (
 
 type CustomerGroup struct {
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Id string `json:id`
+    Id int64 `json:"id"`
   
-    Name time.Time `json:name`
+    Name time.Time `json:"name"`
   
-    Query time.Time `json:query`
+    Query time.Time `json:"query"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-func (api *API) CustomerGroup_index() (*[]CustomerGroup, error) {
+func (api *API) CustomerGroups() (*[]CustomerGroup, error) {
   res, status, err := api.request("/admin/customer_groups.json", "GET", nil)
 
   if err != nil {
@@ -51,16 +51,42 @@ func (api *API) CustomerGroup_index() (*[]CustomerGroup, error) {
 }
 
 
-// TODO implement CustomerGroup.count
 
-// TODO implement CustomerGroup.show
 
-// TODO implement CustomerGroup.other
+func (api *API) CustomerGroup(id int64) (*CustomerGroup, error) {
+  endpoint := fmt.Sprintf("/admin/customer_groups/%d.json", id)
 
-// TODO implement CustomerGroup.create
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement CustomerGroup.update
+  if err != nil {
+    return nil, err
+  }
 
-// TODO implement CustomerGroup.destroy
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]CustomerGroup{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["customer_group"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
+
+
 
 

@@ -12,20 +12,20 @@ import (
 
 type ScriptTag struct {
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Event string `json:event`
+    Event string `json:"event"`
   
-    Id string `json:id`
+    Id string `json:"id"`
   
-    Src string `json:src`
+    Src string `json:"src"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-func (api *API) ScriptTag_index() (*[]ScriptTag, error) {
+func (api *API) ScriptTags() (*[]ScriptTag, error) {
   res, status, err := api.request("/admin/script_tags.json", "GET", nil)
 
   if err != nil {
@@ -51,14 +51,40 @@ func (api *API) ScriptTag_index() (*[]ScriptTag, error) {
 }
 
 
-// TODO implement ScriptTag.count
 
-// TODO implement ScriptTag.show
 
-// TODO implement ScriptTag.create
+func (api *API) ScriptTag(id int64) (*ScriptTag, error) {
+  endpoint := fmt.Sprintf("/admin/script_tags/%d.json", id)
 
-// TODO implement ScriptTag.update
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement ScriptTag.destroy
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]ScriptTag{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["script_tag"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
 
 

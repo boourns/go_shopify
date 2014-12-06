@@ -1,9 +1,21 @@
 require 'erb'
 
+class Overrides
+  def self.overrides
+    @overrides ||= JSON.parse(File.read("./data/overrides.json"))
+  end
+
+  def self.for(type, value)
+    overrides["#{type}/#{value}"]
+  end
+
+end
+
 class Generator
   class Property
-    def initialize(prop)
+    def initialize(prop, instance)
       @prop = prop
+      @instance = instance
     end
 
     def name
@@ -15,16 +27,31 @@ class Generator
     end
 
     def go_type
-      return "string" if @prop["examples"][0].nil?
+      example = @prop["examples"][0].values[0] if @prop["examples"][0]
+      example = @instance || example
+      return "string" if example.nil?
 
-      example = @prop["examples"][0].values[0]
-      t = Time.parse(example) rescue nil
+      return type_for(example)
+    end
+
+    def type_for(thing)
+      return "string" if thing.nil?
+      puts "thing is #{thing}, a #{thing.class}"
+      t = Time.parse(thing) rescue nil
       if t
         return "time.Time"
-      elsif example.is_a?(Integer)
+      elsif thing.is_a?(Array)
+        return "[]#{type_for(thing.first)}"
+      elsif thing.is_a?(Integer)
         return "int64"
-      elsif example.is_a?(Float)
+      elsif thing.is_a?(Float)
         return "float64"
+      elsif thing.class.to_s =~ /\AShopifyAPI::(.*)\z/
+        if o = Overrides.for("type", $1)
+          return o
+        else
+          return $1
+        end
       else
         return "string"
       end
@@ -46,20 +73,7 @@ class Generator
     end
 
     def endpoint
-      ["/admin/#{@klass.name.underscore.pluralize}.json"].join("")
-    end
-
-    def method
-      case @name
-      when 'index', 'show'
-        'GET'
-      when 'create', 'destroy'
-        'POST'
-      when 'update'
-        'PATCH'
-      else
-        raise "Don't know HTTP method for #{@name}"
-      end
+      "/admin/#{@klass.name.underscore.pluralize}"
     end
 
     def render
@@ -68,7 +82,7 @@ class Generator
         
         ERB.new(template).result(binding)
       else
-        "// TODO implement #{@klass.name}.#{@name}"
+        puts "// TODO implement #{@klass.name}.#{@name}"
       end
     end
 
@@ -79,10 +93,14 @@ class Generator
 
   attr_reader :name
 
-  def initialize(api)
+  def initialize(api, instance)
     @api = api
+    @instance = instance
     @name = api["name"].gsub(' ', '')
-    @properties = api["properties"].map { |p| Property.new(p) }
+    @properties = api["properties"].map do |p| 
+      example = instance.send(p["name"].to_sym) rescue nil
+      Property.new(p, example)
+    end
 
     # properties have name:string, description:string, examples: [{parameter:value}]
     @actions = api["actions"].map { |a| Action.new(self, a) }

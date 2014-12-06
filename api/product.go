@@ -1,84 +1,89 @@
 package shopify
 
 import (
-  
-    "encoding/json"
-  
-    "fmt"
-  
-    "time"
-  
+	"encoding/json"
+
+	"fmt"
+
+	"time"
 )
 
 type Product struct {
-  
-    BodyHtml string `json:body_html`
-  
-    CreatedAt time.Time `json:created_at`
-  
-    Handle string `json:handle`
-  
-    Id int64 `json:id`
-  
-    Images string `json:images`
-  
-    Options string `json:options`
-  
-    ProductType string `json:product_type`
-  
-    PublishedAt time.Time `json:published_at`
-  
-    PublishedScope string `json:published_scope`
-  
-    Tags string `json:tags`
-  
-    TemplateSuffix string `json:template_suffix`
-  
-    Title string `json:title`
-  
-    UpdatedAt time.Time `json:updated_at`
-  
-    Variants string `json:variants`
-  
-    Vendor string `json:vendor`
-  
+	BodyHtml string `json:"body_html"`
+
+	CreatedAt time.Time `json:"created_at"`
+
+	Handle string `json:"handle"`
+
+	Id int64 `json:"id"`
+
+	Images []string `json:"images"`
+
+	ProductType string `json:"product_type"`
+
+	PublishedAt time.Time `json:"published_at"`
+
+	PublishedScope string `json:"published_scope"`
+
+	Tags string `json:"tags"`
+
+	TemplateSuffix string `json:"template_suffix"`
+
+	Title string `json:"title"`
+
+	UpdatedAt time.Time `json:"updated_at"`
+
+	Vendor string `json:"vendor"`
 }
 
-
-func (api *API) Product_index() (*[]Product, error) {
-  res, status, err := api.request("/admin/products.json", "GET", nil)
-
-  if err != nil {
-    return nil, err
-  }
-
-  if status != 200 {
-    return nil, fmt.Errorf("Status returned: %d", status)
-  }
-
-  r := &map[string][]Product{}
-  err = json.NewDecoder(res).Decode(r)
-
-  fmt.Printf("things are: %v\n\n", *r)
-
-  result := (*r)["products"]
+func (api *API) Products() (*[]Product, error) {
+	res, status, err := api.request("/admin/products.json", "GET", nil)
 
 	if err != nil {
 		return nil, err
-  }
+	}
 
-  return &result, nil
+	if status != 200 {
+		return nil, fmt.Errorf("Status returned: %d", status)
+	}
+
+	r := &map[string][]Product{}
+	err = json.NewDecoder(res).Decode(r)
+
+	fmt.Printf("things are: %v\n\n", *r)
+
+	result := (*r)["products"]
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
+func (api *API) Product(id int64) (*Product, error) {
+	endpoint := fmt.Sprintf("/admin/products/%d.json", id)
 
-// TODO implement Product.count
+	res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement Product.show
+	if err != nil {
+		return nil, err
+	}
 
-// TODO implement Product.create
+	if status != 200 {
+		return nil, fmt.Errorf("Status returned: %d", status)
+	}
 
-// TODO implement Product.update
+	r := map[string]Product{}
+	err = json.NewDecoder(res).Decode(&r)
 
-// TODO implement Product.destroy
+	fmt.Printf("things are: %v\n\n", r)
 
+	result := r["product"]
 
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}

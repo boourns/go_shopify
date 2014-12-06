@@ -12,24 +12,24 @@ import (
 
 type ProductImage struct {
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    Position string `json:position`
+    Position string `json:"position"`
   
-    ProductId string `json:product_id`
+    ProductId string `json:"product_id"`
   
-    VariantIds string `json:variant_ids`
+    VariantIds []string `json:"variant_ids"`
   
-    Src string `json:src`
+    Src string `json:"src"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-func (api *API) ProductImage_index() (*[]ProductImage, error) {
+func (api *API) ProductImages() (*[]ProductImage, error) {
   res, status, err := api.request("/admin/product_images.json", "GET", nil)
 
   if err != nil {
@@ -55,14 +55,40 @@ func (api *API) ProductImage_index() (*[]ProductImage, error) {
 }
 
 
-// TODO implement ProductImage.count
 
-// TODO implement ProductImage.show
 
-// TODO implement ProductImage.create
+func (api *API) ProductImage(id int64) (*ProductImage, error) {
+  endpoint := fmt.Sprintf("/admin/product_images/%d.json", id)
 
-// TODO implement ProductImage.update
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement ProductImage.destroy
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]ProductImage{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["product_image"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
 
 

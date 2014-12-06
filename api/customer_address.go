@@ -10,38 +10,38 @@ import (
 
 type CustomerAddress struct {
   
-    Address1 string `json:address1`
+    Address1 string `json:"address1"`
   
-    Address2 string `json:address2`
+    Address2 string `json:"address2"`
   
-    City string `json:city`
+    City string `json:"city"`
   
-    Company string `json:company`
+    Company string `json:"company"`
   
-    FirstName string `json:first_name`
+    FirstName string `json:"first_name"`
   
-    LastName string `json:last_name`
+    LastName string `json:"last_name"`
   
-    Phone string `json:phone`
+    Phone string `json:"phone"`
   
-    Province string `json:province`
+    Province string `json:"province"`
   
-    Country string `json:country`
+    Country string `json:"country"`
   
-    Zip string `json:zip`
+    Zip string `json:"zip"`
   
-    Name string `json:name`
+    Name string `json:"name"`
   
-    ProvinceCode string `json:province_code`
+    ProvinceCode string `json:"province_code"`
   
-    CountryCode string `json:country_code`
+    CountryCode string `json:"country_code"`
   
-    CountryName string `json:country_name`
+    CountryName string `json:"country_name"`
   
 }
 
 
-func (api *API) CustomerAddress_index() (*[]CustomerAddress, error) {
+func (api *API) CustomerAddresses() (*[]CustomerAddress, error) {
   res, status, err := api.request("/admin/customer_addresses.json", "GET", nil)
 
   if err != nil {
@@ -67,16 +67,42 @@ func (api *API) CustomerAddress_index() (*[]CustomerAddress, error) {
 }
 
 
-// TODO implement CustomerAddress.show
+func (api *API) CustomerAddress(id int64) (*CustomerAddress, error) {
+  endpoint := fmt.Sprintf("/admin/customer_addresses/%d.json", id)
 
-// TODO implement CustomerAddress.create
+  res, status, err := api.request(endpoint, "GET", nil)
 
-// TODO implement CustomerAddress.update
+  if err != nil {
+    return nil, err
+  }
 
-// TODO implement CustomerAddress.destroy
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
 
-// TODO implement CustomerAddress.set
+  r := map[string]CustomerAddress{}
+  err = json.NewDecoder(res).Decode(&r)
 
-// TODO implement CustomerAddress.default
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["customer_address"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+
+
+
+
+
+
+
+
+
 
 

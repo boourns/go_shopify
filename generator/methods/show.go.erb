@@ -1,0 +1,26 @@
+func (api *API) <%= @klass.name %>(id int64) (*<%= @klass.name %>, error) {
+  endpoint := fmt.Sprintf("<%= endpoint %>/%d.json", id)
+
+  res, status, err := api.request(endpoint, "GET", nil)
+
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]<%= @klass.name %>{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["<%= @klass.name.underscore %>"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}

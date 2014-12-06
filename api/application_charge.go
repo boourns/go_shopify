@@ -12,32 +12,58 @@ import (
 
 type ApplicationCharge struct {
   
-    ConfirmationUrl string `json:confirmation_url`
+    ConfirmationUrl string `json:"confirmation_url"`
   
-    CreatedAt time.Time `json:created_at`
+    CreatedAt time.Time `json:"created_at"`
   
-    Id int64 `json:id`
+    Id int64 `json:"id"`
   
-    Name string `json:name`
+    Name string `json:"name"`
   
-    Price string `json:price`
+    Price string `json:"price"`
   
-    ReturnUrl string `json:return_url`
+    ReturnUrl string `json:"return_url"`
   
-    Status string `json:status`
+    Status string `json:"status"`
   
-    Test string `json:test`
+    Test string `json:"test"`
   
-    UpdatedAt time.Time `json:updated_at`
+    UpdatedAt time.Time `json:"updated_at"`
   
 }
 
 
-// TODO implement ApplicationCharge.create
 
-// TODO implement ApplicationCharge.show
 
-func (api *API) ApplicationCharge_index() (*[]ApplicationCharge, error) {
+func (api *API) ApplicationCharge(id int64) (*ApplicationCharge, error) {
+  endpoint := fmt.Sprintf("/admin/application_charges/%d.json", id)
+
+  res, status, err := api.request(endpoint, "GET", nil)
+
+  if err != nil {
+    return nil, err
+  }
+
+  if status != 200 {
+    return nil, fmt.Errorf("Status returned: %d", status)
+  }
+
+  r := map[string]ApplicationCharge{}
+  err = json.NewDecoder(res).Decode(&r)
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  result := r["application_charge"]
+
+	if err != nil {
+		return nil, err
+  }
+
+  return &result, nil
+}
+
+
+func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
   res, status, err := api.request("/admin/application_charges.json", "GET", nil)
 
   if err != nil {
@@ -63,6 +89,6 @@ func (api *API) ApplicationCharge_index() (*[]ApplicationCharge, error) {
 }
 
 
-// TODO implement ApplicationCharge.activate
+
 
 
