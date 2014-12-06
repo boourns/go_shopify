@@ -10,7 +10,7 @@ import (
 
 type Country struct {
   
-    CarrierShippingRateProviders []string `json:"carrier_shipping_rate_providers"`
+    CarrierShippingRateProviders []interface{} `json:"carrier_shipping_rate_providers"`
   
     Code string `json:"code"`
   
@@ -18,13 +18,13 @@ type Country struct {
   
     Name string `json:"name"`
   
-    PriceBasedShippingRates []string `json:"price_based_shipping_rates"`
+    PriceBasedShippingRates []interface{} `json:"price_based_shipping_rates"`
   
-    Provinces []string `json:"provinces"`
+    Provinces []interface{} `json:"provinces"`
   
     Tax float64 `json:"tax"`
   
-    WeightBasedShippingRates []string `json:"weight_based_shipping_rates"`
+    WeightBasedShippingRates []interface{} `json:"weight_based_shipping_rates"`
   
 }
 

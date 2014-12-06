@@ -8,7 +8,6 @@ class Overrides
   def self.for(type, value)
     overrides["#{type}/#{value}"]
   end
-
 end
 
 class Generator
@@ -40,6 +39,8 @@ class Generator
       t = Time.parse(thing) rescue nil
       if t
         return "time.Time"
+      elsif thing.is_a?(Array) && thing == []
+        return "[]interface{}"
       elsif thing.is_a?(Array)
         return "[]#{type_for(thing.first)}"
       elsif thing.is_a?(Integer)
@@ -47,11 +48,12 @@ class Generator
       elsif thing.is_a?(Float)
         return "float64"
       elsif thing.class.to_s =~ /\AShopifyAPI::(.*)\z/
-        if o = Overrides.for("type", $1)
-          return o
-        else
-          return $1
+        klass = Overrides.for("type", $1) || $1
+        if !Generator.api_classes.include?(klass)
+          return "interface{}"
+          Generator.add_subclass(klass, thing)
         end
+        return klass
       else
         return "string"
       end
@@ -97,6 +99,7 @@ class Generator
     @api = api
     @instance = instance
     @name = api["name"].gsub(' ', '')
+
     @properties = api["properties"].map do |p| 
       example = instance.send(p["name"].to_sym) rescue nil
       Property.new(p, example)
@@ -114,5 +117,13 @@ class Generator
 
   def imports
     (@properties + @actions).map(&:imports).flatten.compact.sort.uniq
+  end
+
+  def self.api_classes=(names)
+    @api_classes = names
+  end
+
+  def self.api_classes
+    @api_classes
   end
 end
