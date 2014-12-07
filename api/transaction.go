@@ -42,11 +42,12 @@ type Transaction struct {
   
     Currency string `json:"currency"`
   
+  api *API
 }
 
 
 func (api *API) Transactions() (*[]Transaction, error) {
-  res, status, err := api.request("/admin/transactions.json", "GET", nil)
+  res, status, err := api.request("/admin/transactions.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -67,6 +68,10 @@ func (api *API) Transactions() (*[]Transaction, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -76,7 +81,7 @@ func (api *API) Transactions() (*[]Transaction, error) {
 func (api *API) Transaction(id int64) (*Transaction, error) {
   endpoint := fmt.Sprintf("/admin/transactions/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -97,10 +102,15 @@ func (api *API) Transaction(id int64) (*Transaction, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
+func (api *API) NewTransaction() *Transaction {
+  return &Transaction{api: api}
+}
 
 
 

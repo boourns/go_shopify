@@ -36,11 +36,12 @@ type Location struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
 }
 
 
 func (api *API) Locations() (*[]Location, error) {
-  res, status, err := api.request("/admin/locations.json", "GET", nil)
+  res, status, err := api.request("/admin/locations.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -61,6 +62,10 @@ func (api *API) Locations() (*[]Location, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -68,7 +73,7 @@ func (api *API) Locations() (*[]Location, error) {
 func (api *API) Location(id int64) (*Location, error) {
   endpoint := fmt.Sprintf("/admin/locations/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -88,6 +93,8 @@ func (api *API) Location(id int64) (*Location, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

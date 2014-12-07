@@ -38,15 +38,19 @@ type RecurringApplicationCharge struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
 }
 
 
+func (api *API) NewRecurringApplicationCharge() *RecurringApplicationCharge {
+  return &RecurringApplicationCharge{api: api}
+}
 
 
 func (api *API) RecurringApplicationCharge(id int64) (*RecurringApplicationCharge, error) {
   endpoint := fmt.Sprintf("/admin/recurring_application_charges/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -67,12 +71,14 @@ func (api *API) RecurringApplicationCharge(id int64) (*RecurringApplicationCharg
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
 func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, error) {
-  res, status, err := api.request("/admin/recurring_application_charges.json", "GET", nil)
+  res, status, err := api.request("/admin/recurring_application_charges.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -91,6 +97,10 @@ func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, er
 
 	if err != nil {
 		return nil, err
+  }
+
+  for _, v := range result {
+    v.api = api
   }
 
   return &result, nil

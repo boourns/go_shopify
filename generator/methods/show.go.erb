@@ -1,7 +1,7 @@
 func (api *API) <%= @klass.name %>(id int64) (*<%= @klass.name %>, error) {
   endpoint := fmt.Sprintf("<%= endpoint %>/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -21,6 +21,8 @@ func (api *API) <%= @klass.name %>(id int64) (*<%= @klass.name %>, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

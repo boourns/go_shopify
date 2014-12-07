@@ -88,7 +88,11 @@ class Generator
     end
 
     def imports
-      ["encoding/json", "fmt"]
+      imports = ["encoding/json", "fmt"]
+      if @name == "update"
+        imports << "bytes"
+      end
+      imports
     end
   end
 

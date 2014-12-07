@@ -36,3 +36,22 @@ func TestReadProducts(t *testing.T) {
 
 	fmt.Printf("\n\nproducts are %#v\n\n", products)
 }
+
+func TestCreateWebhook(t *testing.T) {
+	if !remoteEnabled {
+		return
+	}
+
+	webhook := api.NewWebhook()
+
+	webhook.Address = "https://102ee3c5.ngrok.com/service/hook"
+	webhook.Format = "json"
+	webhook.Topic = "orders/create"
+	err := webhook.Save()
+
+	if err != nil {
+		t.Errorf("Error fetching webhooks: %v", err)
+	}
+
+	fmt.Printf("\n\nwebhooks are %#v\n\n", webhook)
+}

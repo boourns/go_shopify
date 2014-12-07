@@ -2,6 +2,8 @@ package shopify
 
 import (
   
+    "bytes"
+  
     "encoding/json"
   
     "fmt"
@@ -26,11 +28,12 @@ type Country struct {
   
     WeightBasedShippingRates []interface{} `json:"weight_based_shipping_rates"`
   
+  api *API
 }
 
 
 func (api *API) Countries() (*[]Country, error) {
-  res, status, err := api.request("/admin/countries.json", "GET", nil)
+  res, status, err := api.request("/admin/countries.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -51,6 +54,10 @@ func (api *API) Countries() (*[]Country, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -60,7 +67,7 @@ func (api *API) Countries() (*[]Country, error) {
 func (api *API) Country(id int64) (*Country, error) {
   endpoint := fmt.Sprintf("/admin/countries/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -81,12 +88,49 @@ func (api *API) Country(id int64) (*Country, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
+func (api *API) NewCountry() *Country {
+  return &Country{api: api}
+}
 
 
+func (obj *Country) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/countries/%d.json", obj.Id)
+  method := "PUT"
+  expectedStatus := 201
+
+  if obj.Id == 0 {
+    endpoint = fmt.Sprintf("/admin/countries.json")
+    method = "POST"
+    expectedStatus = 201
+  }
+
+  buf := &bytes.Buffer{}
+  err := json.NewEncoder(buf).Encode(obj)
+
+  if err != nil {
+    return err
+  }
+
+  res, status, err := obj.api.request(endpoint, method, nil, buf)
+
+  if err != nil {
+    return err
+  }
+
+  if status != expectedStatus {
+    return fmt.Errorf("Status returned: %d", status)
+  }
+
+  fmt.Printf("things are: %v\n\n", res)
+
+  return nil
+}
 
 
 

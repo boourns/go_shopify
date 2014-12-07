@@ -2,6 +2,8 @@ package shopify
 
 import (
   
+    "bytes"
+  
     "encoding/json"
   
     "fmt"
@@ -16,11 +18,12 @@ type Redirect struct {
   
     Target string `json:"target"`
   
+  api *API
 }
 
 
 func (api *API) Redirects() (*[]Redirect, error) {
-  res, status, err := api.request("/admin/redirects.json", "GET", nil)
+  res, status, err := api.request("/admin/redirects.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -41,6 +44,10 @@ func (api *API) Redirects() (*[]Redirect, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -50,7 +57,7 @@ func (api *API) Redirects() (*[]Redirect, error) {
 func (api *API) Redirect(id int64) (*Redirect, error) {
   endpoint := fmt.Sprintf("/admin/redirects/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -71,12 +78,49 @@ func (api *API) Redirect(id int64) (*Redirect, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
+func (api *API) NewRedirect() *Redirect {
+  return &Redirect{api: api}
+}
 
 
+func (obj *Redirect) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/redirects/%d.json", obj.Id)
+  method := "PUT"
+  expectedStatus := 201
+
+  if obj.Id == 0 {
+    endpoint = fmt.Sprintf("/admin/redirects.json")
+    method = "POST"
+    expectedStatus = 201
+  }
+
+  buf := &bytes.Buffer{}
+  err := json.NewEncoder(buf).Encode(obj)
+
+  if err != nil {
+    return err
+  }
+
+  res, status, err := obj.api.request(endpoint, method, nil, buf)
+
+  if err != nil {
+    return err
+  }
+
+  if status != expectedStatus {
+    return fmt.Errorf("Status returned: %d", status)
+  }
+
+  fmt.Printf("things are: %v\n\n", res)
+
+  return nil
+}
 
 
 

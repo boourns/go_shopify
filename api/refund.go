@@ -26,13 +26,14 @@ type Refund struct {
   
     UserId int64 `json:"user_id"`
   
+  api *API
 }
 
 
 func (api *API) Refund(id int64) (*Refund, error) {
   endpoint := fmt.Sprintf("/admin/refunds/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -52,6 +53,8 @@ func (api *API) Refund(id int64) (*Refund, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

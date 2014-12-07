@@ -1,5 +1,5 @@
 func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
-  res, status, err := api.request("<%= endpoint %>.json", "GET", nil)
+  res, status, err := api.request("<%= endpoint %>.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -18,6 +18,10 @@ func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
 
 	if err != nil {
 		return nil, err
+  }
+
+  for _, v := range result {
+    v.api = api
   }
 
   return &result, nil

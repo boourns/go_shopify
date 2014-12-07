@@ -28,15 +28,19 @@ type Collect struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
+}
+
+
+func (api *API) NewCollect() *Collect {
+  return &Collect{api: api}
 }
 
 
 
 
-
-
 func (api *API) Collects() (*[]Collect, error) {
-  res, status, err := api.request("/admin/collects.json", "GET", nil)
+  res, status, err := api.request("/admin/collects.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -57,6 +61,10 @@ func (api *API) Collects() (*[]Collect, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -66,7 +74,7 @@ func (api *API) Collects() (*[]Collect, error) {
 func (api *API) Collect(id int64) (*Collect, error) {
   endpoint := fmt.Sprintf("/admin/collects/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -86,6 +94,8 @@ func (api *API) Collect(id int64) (*Collect, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

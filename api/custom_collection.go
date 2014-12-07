@@ -2,6 +2,8 @@ package shopify
 
 import (
   
+    "bytes"
+  
     "encoding/json"
   
     "fmt"
@@ -36,11 +38,12 @@ type CustomCollection struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
 }
 
 
 func (api *API) CustomCollections() (*[]CustomCollection, error) {
-  res, status, err := api.request("/admin/custom_collections.json", "GET", nil)
+  res, status, err := api.request("/admin/custom_collections.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -61,6 +64,10 @@ func (api *API) CustomCollections() (*[]CustomCollection, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -70,7 +77,7 @@ func (api *API) CustomCollections() (*[]CustomCollection, error) {
 func (api *API) CustomCollection(id int64) (*CustomCollection, error) {
   endpoint := fmt.Sprintf("/admin/custom_collections/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -91,12 +98,49 @@ func (api *API) CustomCollection(id int64) (*CustomCollection, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
+func (api *API) NewCustomCollection() *CustomCollection {
+  return &CustomCollection{api: api}
+}
 
 
+func (obj *CustomCollection) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/custom_collections/%d.json", obj.Id)
+  method := "PUT"
+  expectedStatus := 201
+
+  if obj.Id == 0 {
+    endpoint = fmt.Sprintf("/admin/custom_collections.json")
+    method = "POST"
+    expectedStatus = 201
+  }
+
+  buf := &bytes.Buffer{}
+  err := json.NewEncoder(buf).Encode(obj)
+
+  if err != nil {
+    return err
+  }
+
+  res, status, err := obj.api.request(endpoint, method, nil, buf)
+
+  if err != nil {
+    return err
+  }
+
+  if status != expectedStatus {
+    return fmt.Errorf("Status returned: %d", status)
+  }
+
+  fmt.Printf("things are: %v\n\n", res)
+
+  return nil
+}
 
 
 

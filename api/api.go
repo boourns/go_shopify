@@ -14,13 +14,13 @@ type API struct {
 	client *http.Client
 }
 
-func (api *API) request(endpoint string, method string, params map[string]interface{}) (result *bytes.Buffer, status int, err error) {
+func (api *API) request(endpoint string, method string, params map[string]interface{}, body io.Reader) (result *bytes.Buffer, status int, err error) {
 	if api.client == nil {
 		api.client = &http.Client{}
 	}
 
 	uri := fmt.Sprintf("%s/%s", api.URI, endpoint)
-	req, err := http.NewRequest(method, uri, nil)
+	req, err := http.NewRequest(method, uri, body)
 	if err != nil {
 		return
 	}

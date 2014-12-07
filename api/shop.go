@@ -80,13 +80,14 @@ type Shop struct {
   
     HasStorefront string `json:"has_storefront"`
   
+  api *API
 }
 
 
 func (api *API) Shop(id int64) (*Shop, error) {
   endpoint := fmt.Sprintf("/admin/shops/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -106,6 +107,8 @@ func (api *API) Shop(id int64) (*Shop, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

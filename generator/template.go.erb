@@ -10,6 +10,7 @@ type <%= @name %> struct {
   <% @properties.each do |p| %>
     <%= p.name.camelize %> <%= p.go_type %> `json:"<%= p.name %>"`
   <% end %>
+  api *API
 }
 
 <% @actions.each do |action| %>

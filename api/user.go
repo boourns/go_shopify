@@ -38,11 +38,12 @@ type User struct {
   
     UserType string `json:"user_type"`
   
+  api *API
 }
 
 
 func (api *API) Users() (*[]User, error) {
-  res, status, err := api.request("/admin/users.json", "GET", nil)
+  res, status, err := api.request("/admin/users.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -63,6 +64,10 @@ func (api *API) Users() (*[]User, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -70,7 +75,7 @@ func (api *API) Users() (*[]User, error) {
 func (api *API) User(id int64) (*User, error) {
   endpoint := fmt.Sprintf("/admin/users/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -90,6 +95,8 @@ func (api *API) User(id int64) (*User, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

@@ -2,6 +2,8 @@ package shopify
 
 import (
   
+    "bytes"
+  
     "encoding/json"
   
     "fmt"
@@ -34,11 +36,12 @@ type Page struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
 }
 
 
 func (api *API) Pages() (*[]Page, error) {
-  res, status, err := api.request("/admin/pages.json", "GET", nil)
+  res, status, err := api.request("/admin/pages.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -59,6 +62,10 @@ func (api *API) Pages() (*[]Page, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -68,7 +75,7 @@ func (api *API) Pages() (*[]Page, error) {
 func (api *API) Page(id int64) (*Page, error) {
   endpoint := fmt.Sprintf("/admin/pages/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -89,12 +96,49 @@ func (api *API) Page(id int64) (*Page, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
+func (api *API) NewPage() *Page {
+  return &Page{api: api}
+}
 
 
+func (obj *Page) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/pages/%d.json", obj.Id)
+  method := "PUT"
+  expectedStatus := 201
+
+  if obj.Id == 0 {
+    endpoint = fmt.Sprintf("/admin/pages.json")
+    method = "POST"
+    expectedStatus = 201
+  }
+
+  buf := &bytes.Buffer{}
+  err := json.NewEncoder(buf).Encode(obj)
+
+  if err != nil {
+    return err
+  }
+
+  res, status, err := obj.api.request(endpoint, method, nil, buf)
+
+  if err != nil {
+    return err
+  }
+
+  if status != expectedStatus {
+    return fmt.Errorf("Status returned: %d", status)
+  }
+
+  fmt.Printf("things are: %v\n\n", res)
+
+  return nil
+}
 
 
 

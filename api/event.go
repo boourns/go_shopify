@@ -32,11 +32,12 @@ type Event struct {
   
     Verb string `json:"verb"`
   
+  api *API
 }
 
 
 func (api *API) Events() (*[]Event, error) {
-  res, status, err := api.request("/admin/events.json", "GET", nil)
+  res, status, err := api.request("/admin/events.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -57,6 +58,10 @@ func (api *API) Events() (*[]Event, error) {
 		return nil, err
   }
 
+  for _, v := range result {
+    v.api = api
+  }
+
   return &result, nil
 }
 
@@ -64,7 +69,7 @@ func (api *API) Events() (*[]Event, error) {
 func (api *API) Event(id int64) (*Event, error) {
   endpoint := fmt.Sprintf("/admin/events/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -84,6 +89,8 @@ func (api *API) Event(id int64) (*Event, error) {
 	if err != nil {
 		return nil, err
   }
+
+  result.api = api
 
   return &result, nil
 }

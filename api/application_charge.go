@@ -30,15 +30,19 @@ type ApplicationCharge struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
+  api *API
 }
 
 
+func (api *API) NewApplicationCharge() *ApplicationCharge {
+  return &ApplicationCharge{api: api}
+}
 
 
 func (api *API) ApplicationCharge(id int64) (*ApplicationCharge, error) {
   endpoint := fmt.Sprintf("/admin/application_charges/%d.json", id)
 
-  res, status, err := api.request(endpoint, "GET", nil)
+  res, status, err := api.request(endpoint, "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -59,12 +63,14 @@ func (api *API) ApplicationCharge(id int64) (*ApplicationCharge, error) {
 		return nil, err
   }
 
+  result.api = api
+
   return &result, nil
 }
 
 
 func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
-  res, status, err := api.request("/admin/application_charges.json", "GET", nil)
+  res, status, err := api.request("/admin/application_charges.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -83,6 +89,10 @@ func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
 
 	if err != nil {
 		return nil, err
+  }
+
+  for _, v := range result {
+    v.api = api
   }
 
   return &result, nil
