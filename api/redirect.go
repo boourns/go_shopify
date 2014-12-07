@@ -100,8 +100,11 @@ func (obj *Redirect) Save() (error) {
     expectedStatus = 201
   }
 
+  body := map[string]*Redirect{}
+  body["redirect"] = obj
+
   buf := &bytes.Buffer{}
-  err := json.NewEncoder(buf).Encode(obj)
+  err := json.NewEncoder(buf).Encode(body)
 
   if err != nil {
     return err
@@ -114,7 +117,13 @@ func (obj *Redirect) Save() (error) {
   }
 
   if status != expectedStatus {
-    return fmt.Errorf("Status returned: %d", status)
+    r := errorResponse{}
+    err = json.NewDecoder(res).Decode(&r)
+    if err == nil {
+      return fmt.Errorf("Status %d: %v", status, r.Errors)
+    } else {
+      return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
+    }
   }
 
   fmt.Printf("things are: %v\n\n", res)

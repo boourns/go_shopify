@@ -14,6 +14,10 @@ type API struct {
 	client *http.Client
 }
 
+type errorResponse struct {
+	Errors map[string]string `json:"errors"`
+}
+
 func (api *API) request(endpoint string, method string, params map[string]interface{}, body io.Reader) (result *bytes.Buffer, status int, err error) {
 	if api.client == nil {
 		api.client = &http.Client{}
