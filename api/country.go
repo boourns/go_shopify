@@ -32,7 +32,7 @@ type Country struct {
 }
 
 
-func (api *API) Countries() (*[]Country, error) {
+func (api *API) Countries() ([]Country, error) {
   res, status, err := api.request("/admin/countries.json", "GET", nil, nil)
 
   if err != nil {
@@ -48,7 +48,7 @@ func (api *API) Countries() (*[]Country, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["country"]
+  result := (*r)["countries"]
 
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (api *API) Countries() (*[]Country, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -135,6 +135,17 @@ func (obj *Country) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Country{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["country"]
 
   fmt.Printf("things are: %v\n\n", res)
 

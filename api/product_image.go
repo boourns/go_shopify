@@ -32,7 +32,7 @@ type ProductImage struct {
 }
 
 
-func (api *API) ProductImages() (*[]ProductImage, error) {
+func (api *API) ProductImages() ([]ProductImage, error) {
   res, status, err := api.request("/admin/product_images.json", "GET", nil, nil)
 
   if err != nil {
@@ -48,7 +48,7 @@ func (api *API) ProductImages() (*[]ProductImage, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["product_image"]
+  result := (*r)["product_images"]
 
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (api *API) ProductImages() (*[]ProductImage, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -135,6 +135,17 @@ func (obj *ProductImage) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]ProductImage{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["product_image"]
 
   fmt.Printf("things are: %v\n\n", res)
 

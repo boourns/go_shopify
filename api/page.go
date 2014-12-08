@@ -40,7 +40,7 @@ type Page struct {
 }
 
 
-func (api *API) Pages() (*[]Page, error) {
+func (api *API) Pages() ([]Page, error) {
   res, status, err := api.request("/admin/pages.json", "GET", nil, nil)
 
   if err != nil {
@@ -56,7 +56,7 @@ func (api *API) Pages() (*[]Page, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["page"]
+  result := (*r)["pages"]
 
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (api *API) Pages() (*[]Page, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -143,6 +143,17 @@ func (obj *Page) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Page{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["page"]
 
   fmt.Printf("things are: %v\n\n", res)
 

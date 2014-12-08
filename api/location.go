@@ -40,7 +40,7 @@ type Location struct {
 }
 
 
-func (api *API) Locations() (*[]Location, error) {
+func (api *API) Locations() ([]Location, error) {
   res, status, err := api.request("/admin/locations.json", "GET", nil, nil)
 
   if err != nil {
@@ -56,7 +56,7 @@ func (api *API) Locations() (*[]Location, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["location"]
+  result := (*r)["locations"]
 
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (api *API) Locations() (*[]Location, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

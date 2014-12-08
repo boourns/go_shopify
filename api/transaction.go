@@ -46,7 +46,7 @@ type Transaction struct {
 }
 
 
-func (api *API) Transactions() (*[]Transaction, error) {
+func (api *API) Transactions() ([]Transaction, error) {
   res, status, err := api.request("/admin/transactions.json", "GET", nil, nil)
 
   if err != nil {
@@ -62,7 +62,7 @@ func (api *API) Transactions() (*[]Transaction, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["transaction"]
+  result := (*r)["transactions"]
 
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (api *API) Transactions() (*[]Transaction, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

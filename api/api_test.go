@@ -42,15 +42,25 @@ func TestCreateWebhook(t *testing.T) {
 		return
 	}
 
+	webhooks, err := api.Webhooks()
+
+	if err != nil {
+		fmt.Printf("Err fetching webhooks: %v", err)
+	}
+
+	for _, v := range webhooks {
+		fmt.Printf("Existing webhook: %#v", v)
+	}
+
 	webhook := api.NewWebhook()
 
 	webhook.Address = "https://102ee3c5.ngrok.com/service/hook"
 	webhook.Format = "json"
-	webhook.Topic = "orders/create"
-	err := webhook.Save()
+	webhook.Topic = "orders/delete"
+	err = webhook.Save()
 
 	if err != nil {
-		t.Errorf("Error fetching webhooks: %v", err)
+		t.Errorf("Error creating webhook: %v", err)
 	}
 
 	fmt.Printf("\n\nwebhooks are %#v\n\n", webhook)

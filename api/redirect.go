@@ -22,7 +22,7 @@ type Redirect struct {
 }
 
 
-func (api *API) Redirects() (*[]Redirect, error) {
+func (api *API) Redirects() ([]Redirect, error) {
   res, status, err := api.request("/admin/redirects.json", "GET", nil, nil)
 
   if err != nil {
@@ -38,7 +38,7 @@ func (api *API) Redirects() (*[]Redirect, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["redirect"]
+  result := (*r)["redirects"]
 
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (api *API) Redirects() (*[]Redirect, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -125,6 +125,17 @@ func (obj *Redirect) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Redirect{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["redirect"]
 
   fmt.Printf("things are: %v\n\n", res)
 

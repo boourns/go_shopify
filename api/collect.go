@@ -39,7 +39,7 @@ func (api *API) NewCollect() *Collect {
 
 
 
-func (api *API) Collects() (*[]Collect, error) {
+func (api *API) Collects() ([]Collect, error) {
   res, status, err := api.request("/admin/collects.json", "GET", nil, nil)
 
   if err != nil {
@@ -55,7 +55,7 @@ func (api *API) Collects() (*[]Collect, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["collect"]
+  result := (*r)["collects"]
 
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (api *API) Collects() (*[]Collect, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

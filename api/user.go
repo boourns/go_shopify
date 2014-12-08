@@ -42,7 +42,7 @@ type User struct {
 }
 
 
-func (api *API) Users() (*[]User, error) {
+func (api *API) Users() ([]User, error) {
   res, status, err := api.request("/admin/users.json", "GET", nil, nil)
 
   if err != nil {
@@ -58,7 +58,7 @@ func (api *API) Users() (*[]User, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["user"]
+  result := (*r)["users"]
 
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (api *API) Users() (*[]User, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

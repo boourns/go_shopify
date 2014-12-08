@@ -15,7 +15,7 @@ type API struct {
 }
 
 type errorResponse struct {
-	Errors map[string]string `json:"errors"`
+	Errors map[string]interface{} `json:"errors"`
 }
 
 func (api *API) request(endpoint string, method string, params map[string]interface{}, body io.Reader) (result *bytes.Buffer, status int, err error) {

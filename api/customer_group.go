@@ -28,7 +28,7 @@ type CustomerGroup struct {
 }
 
 
-func (api *API) CustomerGroups() (*[]CustomerGroup, error) {
+func (api *API) CustomerGroups() ([]CustomerGroup, error) {
   res, status, err := api.request("/admin/customer_groups.json", "GET", nil, nil)
 
   if err != nil {
@@ -44,7 +44,7 @@ func (api *API) CustomerGroups() (*[]CustomerGroup, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["customer_group"]
+  result := (*r)["customer_groups"]
 
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (api *API) CustomerGroups() (*[]CustomerGroup, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -133,6 +133,17 @@ func (obj *CustomerGroup) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]CustomerGroup{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["customer_group"]
 
   fmt.Printf("things are: %v\n\n", res)
 

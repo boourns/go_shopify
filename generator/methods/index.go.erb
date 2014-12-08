@@ -1,4 +1,4 @@
-func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
+func (api *API) <%= @klass.name.pluralize %>() ([]<%= @klass.name %>, error) {
   res, status, err := api.request("<%= endpoint %>.json", "GET", nil, nil)
 
   if err != nil {
@@ -14,7 +14,7 @@ func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["<%= @klass.name.underscore %>"]
+  result := (*r)["<%= @klass.name.underscore.pluralize %>"]
 
 	if err != nil {
 		return nil, err
@@ -24,5 +24,5 @@ func (api *API) <%= @klass.name.pluralize %>() (*[]<%= @klass.name %>, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }

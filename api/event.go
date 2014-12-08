@@ -36,7 +36,7 @@ type Event struct {
 }
 
 
-func (api *API) Events() (*[]Event, error) {
+func (api *API) Events() ([]Event, error) {
   res, status, err := api.request("/admin/events.json", "GET", nil, nil)
 
   if err != nil {
@@ -52,7 +52,7 @@ func (api *API) Events() (*[]Event, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["event"]
+  result := (*r)["events"]
 
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (api *API) Events() (*[]Event, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

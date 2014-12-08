@@ -28,7 +28,7 @@ type CustomerSavedSearch struct {
 }
 
 
-func (api *API) CustomerSavedSearches() (*[]CustomerSavedSearch, error) {
+func (api *API) CustomerSavedSearches() ([]CustomerSavedSearch, error) {
   res, status, err := api.request("/admin/customer_saved_searches.json", "GET", nil, nil)
 
   if err != nil {
@@ -44,7 +44,7 @@ func (api *API) CustomerSavedSearches() (*[]CustomerSavedSearch, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["customer_saved_search"]
+  result := (*r)["customer_saved_searches"]
 
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (api *API) CustomerSavedSearches() (*[]CustomerSavedSearch, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -133,6 +133,17 @@ func (obj *CustomerSavedSearch) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]CustomerSavedSearch{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["customer_saved_search"]
 
   fmt.Printf("things are: %v\n\n", res)
 

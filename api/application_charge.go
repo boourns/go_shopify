@@ -69,7 +69,7 @@ func (api *API) ApplicationCharge(id int64) (*ApplicationCharge, error) {
 }
 
 
-func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
+func (api *API) ApplicationCharges() ([]ApplicationCharge, error) {
   res, status, err := api.request("/admin/application_charges.json", "GET", nil, nil)
 
   if err != nil {
@@ -85,7 +85,7 @@ func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["application_charge"]
+  result := (*r)["application_charges"]
 
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (api *API) ApplicationCharges() (*[]ApplicationCharge, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 

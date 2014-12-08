@@ -32,7 +32,7 @@ type Province struct {
 }
 
 
-func (api *API) Provinces() (*[]Province, error) {
+func (api *API) Provinces() ([]Province, error) {
   res, status, err := api.request("/admin/provinces.json", "GET", nil, nil)
 
   if err != nil {
@@ -48,7 +48,7 @@ func (api *API) Provinces() (*[]Province, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["province"]
+  result := (*r)["provinces"]
 
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (api *API) Provinces() (*[]Province, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -130,6 +130,17 @@ func (obj *Province) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Province{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["province"]
 
   fmt.Printf("things are: %v\n\n", res)
 

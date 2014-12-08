@@ -32,7 +32,7 @@ type Theme struct {
 }
 
 
-func (api *API) Themes() (*[]Theme, error) {
+func (api *API) Themes() ([]Theme, error) {
   res, status, err := api.request("/admin/themes.json", "GET", nil, nil)
 
   if err != nil {
@@ -48,7 +48,7 @@ func (api *API) Themes() (*[]Theme, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["theme"]
+  result := (*r)["themes"]
 
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (api *API) Themes() (*[]Theme, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -133,6 +133,17 @@ func (obj *Theme) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Theme{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["theme"]
 
   fmt.Printf("things are: %v\n\n", res)
 

@@ -40,7 +40,7 @@ type Fulfillment struct {
 }
 
 
-func (api *API) Fulfillments() (*[]Fulfillment, error) {
+func (api *API) Fulfillments() ([]Fulfillment, error) {
   res, status, err := api.request("/admin/fulfillments.json", "GET", nil, nil)
 
   if err != nil {
@@ -56,7 +56,7 @@ func (api *API) Fulfillments() (*[]Fulfillment, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["fulfillment"]
+  result := (*r)["fulfillments"]
 
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (api *API) Fulfillments() (*[]Fulfillment, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -143,6 +143,17 @@ func (obj *Fulfillment) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Fulfillment{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["fulfillment"]
 
   fmt.Printf("things are: %v\n\n", res)
 

@@ -42,7 +42,7 @@ type CustomCollection struct {
 }
 
 
-func (api *API) CustomCollections() (*[]CustomCollection, error) {
+func (api *API) CustomCollections() ([]CustomCollection, error) {
   res, status, err := api.request("/admin/custom_collections.json", "GET", nil, nil)
 
   if err != nil {
@@ -58,7 +58,7 @@ func (api *API) CustomCollections() (*[]CustomCollection, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["custom_collection"]
+  result := (*r)["custom_collections"]
 
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (api *API) CustomCollections() (*[]CustomCollection, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -145,6 +145,17 @@ func (obj *CustomCollection) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]CustomCollection{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["custom_collection"]
 
   fmt.Printf("things are: %v\n\n", res)
 

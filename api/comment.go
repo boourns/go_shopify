@@ -44,7 +44,7 @@ type Comment struct {
 }
 
 
-func (api *API) Comments() (*[]Comment, error) {
+func (api *API) Comments() ([]Comment, error) {
   res, status, err := api.request("/admin/comments.json", "GET", nil, nil)
 
   if err != nil {
@@ -60,7 +60,7 @@ func (api *API) Comments() (*[]Comment, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["comment"]
+  result := (*r)["comments"]
 
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (api *API) Comments() (*[]Comment, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -147,6 +147,17 @@ func (obj *Comment) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Comment{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["comment"]
 
   fmt.Printf("things are: %v\n\n", res)
 

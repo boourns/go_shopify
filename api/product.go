@@ -48,7 +48,7 @@ type Product struct {
 }
 
 
-func (api *API) Products() (*[]Product, error) {
+func (api *API) Products() ([]Product, error) {
   res, status, err := api.request("/admin/products.json", "GET", nil, nil)
 
   if err != nil {
@@ -64,7 +64,7 @@ func (api *API) Products() (*[]Product, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["product"]
+  result := (*r)["products"]
 
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (api *API) Products() (*[]Product, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -151,6 +151,17 @@ func (obj *Product) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Product{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["product"]
 
   fmt.Printf("things are: %v\n\n", res)
 

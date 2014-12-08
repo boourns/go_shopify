@@ -46,7 +46,7 @@ type Article struct {
 }
 
 
-func (api *API) Articles() (*[]Article, error) {
+func (api *API) Articles() ([]Article, error) {
   res, status, err := api.request("/admin/articles.json", "GET", nil, nil)
 
   if err != nil {
@@ -62,7 +62,7 @@ func (api *API) Articles() (*[]Article, error) {
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["article"]
+  result := (*r)["articles"]
 
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (api *API) Articles() (*[]Article, error) {
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
@@ -149,6 +149,17 @@ func (obj *Article) Save() (error) {
       return fmt.Errorf("Status %d, and error parsing body: %s", status, err)
     }
   }
+
+  r := map[string]Article{}
+  err = json.NewDecoder(res).Decode(&r)
+
+	if err != nil {
+		return err
+  }
+
+  fmt.Printf("things are: %v\n\n", r)
+
+  *obj = r["article"]
 
   fmt.Printf("things are: %v\n\n", res)
 

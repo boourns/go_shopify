@@ -77,7 +77,7 @@ func (api *API) RecurringApplicationCharge(id int64) (*RecurringApplicationCharg
 }
 
 
-func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, error) {
+func (api *API) RecurringApplicationCharges() ([]RecurringApplicationCharge, error) {
   res, status, err := api.request("/admin/recurring_application_charges.json", "GET", nil, nil)
 
   if err != nil {
@@ -93,7 +93,7 @@ func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, er
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["recurring_application_charge"]
+  result := (*r)["recurring_application_charges"]
 
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (api *API) RecurringApplicationCharges() (*[]RecurringApplicationCharge, er
     v.api = api
   }
 
-  return &result, nil
+  return result, nil
 }
 
 
