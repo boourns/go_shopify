@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 )
 
 var api API
@@ -64,4 +65,16 @@ func TestCreateWebhook(t *testing.T) {
 	}
 
 	fmt.Printf("\n\nwebhooks are %#v\n\n", webhook)
+}
+
+func TestNewProduct(t *testing.T) {
+	product := api.NewProduct()
+	product.Title = "T-shirt"
+	product.PublishedAt = time.Now()
+	product.ProductType = "shirts"
+	err := product.Save()
+	if err != nil {
+		t.Errorf("Error saving product: %s", err)
+	}
+	fmt.Printf("New product ID is: %d\n", product.Id)
 }
