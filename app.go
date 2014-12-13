@@ -91,10 +91,6 @@ func (s *App) signatureString(u *url.URL, prependSig bool) string {
 	return input
 }
 
-type tokenResponse struct {
-	AccessToken string `json:access_token`
-}
-
 func (s *App) AccessToken(shop string, code string) (string, error) {
 	url := fmt.Sprintf("https://%s/admin/oauth/access_token.json", shop)
 
