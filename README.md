@@ -27,7 +27,7 @@ func main() {
 }
 ```
 
-__ Create a new Product__
+__Create a new Product__
 ```go
 product := api.NewProduct()
 product.Title = "T-shirt"
