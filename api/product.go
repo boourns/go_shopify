@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,6 +13,7 @@ import (
   
 )
 
+
 type Product struct {
   
     BodyHtml string `json:"body_html"`
@@ -22,17 +24,11 @@ type Product struct {
   
     Id int64 `json:"id"`
   
-    Images []interface{} `json:"images"`
-  
-    Options []interface{} `json:"options"`
-  
     ProductType string `json:"product_type"`
   
     PublishedAt time.Time `json:"published_at"`
   
     PublishedScope string `json:"published_scope"`
-  
-    Tags string `json:"tags"`
   
     TemplateSuffix string `json:"template_suffix"`
   
@@ -40,11 +36,20 @@ type Product struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
-    Variants []ProductVariant `json:"variants"`
-  
     Vendor string `json:"vendor"`
   
-  api *API
+    Tags string `json:"tags"`
+  
+    Variants []Variant `json:"variants"`
+  
+    Options []Option `json:"options"`
+  
+    Images []interface{} `json:"images"`
+  
+
+  
+    api *API
+  
 }
 
 

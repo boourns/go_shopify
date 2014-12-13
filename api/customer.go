@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,40 +13,54 @@ import (
   
 )
 
-type Comment struct {
+
+type Customer struct {
   
-    ArticleId int64 `json:"article_id"`
-  
-    Author string `json:"author"`
-  
-    BlogId int64 `json:"blog_id"`
-  
-    Body string `json:"body"`
-  
-    BodyHtml string `json:"body_html"`
+    AcceptsMarketing bool `json:"accepts_marketing"`
   
     CreatedAt time.Time `json:"created_at"`
   
     Email string `json:"email"`
   
+    FirstName string `json:"first_name"`
+  
     Id int64 `json:"id"`
   
-    Ip string `json:"ip"`
+    LastName string `json:"last_name"`
   
-    PublishedAt time.Time `json:"published_at"`
+    LastOrderId string `json:"last_order_id"`
   
-    Status string `json:"status"`
+    MultipassIdentifier string `json:"multipass_identifier"`
   
-    UpdatedAt string `json:"updated_at"`
+    Note string `json:"note"`
   
-    UserAgent string `json:"user_agent"`
+    OrdersCount int64 `json:"orders_count"`
   
-  api *API
+    State string `json:"state"`
+  
+    TotalSpent string `json:"total_spent"`
+  
+    UpdatedAt time.Time `json:"updated_at"`
+  
+    VerifiedEmail bool `json:"verified_email"`
+  
+    Tags string `json:"tags"`
+  
+    LastOrderName string `json:"last_order_name"`
+  
+    DefaultAddress DefaultAddress `json:"default_address"`
+  
+    Addresses []DefaultAddress `json:"addresses"`
+  
+
+  
+    api *API
+  
 }
 
 
-func (api *API) Comments() ([]Comment, error) {
-  res, status, err := api.request("/admin/comments.json", "GET", nil, nil)
+func (api *API) Customers() ([]Customer, error) {
+  res, status, err := api.request("/admin/customers.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -55,12 +70,12 @@ func (api *API) Comments() ([]Comment, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := &map[string][]Comment{}
+  r := &map[string][]Customer{}
   err = json.NewDecoder(res).Decode(r)
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["comments"]
+  result := (*r)["customers"]
 
 	if err != nil {
 		return nil, err
@@ -76,8 +91,8 @@ func (api *API) Comments() ([]Comment, error) {
 
 
 
-func (api *API) Comment(id int64) (*Comment, error) {
-  endpoint := fmt.Sprintf("/admin/comments/%d.json", id)
+func (api *API) Customer(id int64) (*Customer, error) {
+  endpoint := fmt.Sprintf("/admin/customers/%d.json", id)
 
   res, status, err := api.request(endpoint, "GET", nil, nil)
 
@@ -89,12 +104,12 @@ func (api *API) Comment(id int64) (*Comment, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := map[string]Comment{}
+  r := map[string]Customer{}
   err = json.NewDecoder(res).Decode(&r)
 
   fmt.Printf("things are: %v\n\n", r)
 
-  result := r["comment"]
+  result := r["customer"]
 
 	if err != nil {
 		return nil, err
@@ -106,24 +121,24 @@ func (api *API) Comment(id int64) (*Comment, error) {
 }
 
 
-func (api *API) NewComment() *Comment {
-  return &Comment{api: api}
+func (api *API) NewCustomer() *Customer {
+  return &Customer{api: api}
 }
 
 
-func (obj *Comment) Save() (error) {
-  endpoint := fmt.Sprintf("/admin/comments/%d.json", obj.Id)
+func (obj *Customer) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/customers/%d.json", obj.Id)
   method := "PUT"
   expectedStatus := 201
 
   if obj.Id == 0 {
-    endpoint = fmt.Sprintf("/admin/comments.json")
+    endpoint = fmt.Sprintf("/admin/customers.json")
     method = "POST"
     expectedStatus = 201
   }
 
-  body := map[string]*Comment{}
-  body["comment"] = obj
+  body := map[string]*Customer{}
+  body["customer"] = obj
 
   buf := &bytes.Buffer{}
   err := json.NewEncoder(buf).Encode(body)
@@ -148,7 +163,7 @@ func (obj *Comment) Save() (error) {
     }
   }
 
-  r := map[string]Comment{}
+  r := map[string]Customer{}
   err = json.NewDecoder(res).Decode(&r)
 
 	if err != nil {
@@ -157,16 +172,12 @@ func (obj *Comment) Save() (error) {
 
   fmt.Printf("things are: %v\n\n", r)
 
-  *obj = r["comment"]
+  *obj = r["customer"]
 
   fmt.Printf("things are: %v\n\n", res)
 
   return nil
 }
-
-
-
-
 
 
 

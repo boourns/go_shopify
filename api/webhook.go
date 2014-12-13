@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -11,6 +12,7 @@ import (
     "time"
   
 )
+
 
 type Webhook struct {
   
@@ -30,7 +32,10 @@ type Webhook struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+
+  
+    api *API
+  
 }
 
 

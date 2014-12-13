@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,28 +13,38 @@ import (
   
 )
 
-type ProductImage struct {
+
+type Metafield struct {
   
     CreatedAt time.Time `json:"created_at"`
   
+    Description string `json:"description"`
+  
     Id int64 `json:"id"`
   
-    Position string `json:"position"`
+    Key string `json:"key"`
   
-    ProductId string `json:"product_id"`
+    Namespace string `json:"namespace"`
   
-    VariantIds []string `json:"variant_ids"`
-  
-    Src string `json:"src"`
+    OwnerId int64 `json:"owner_id"`
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    Value string `json:"value"`
+  
+    ValueType string `json:"value_type"`
+  
+    OwnerResource string `json:"owner_resource"`
+  
+
+  
+    api *API
+  
 }
 
 
-func (api *API) ProductImages() ([]ProductImage, error) {
-  res, status, err := api.request("/admin/product_images.json", "GET", nil, nil)
+func (api *API) Metafields() ([]Metafield, error) {
+  res, status, err := api.request("/admin/metafields.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -43,12 +54,12 @@ func (api *API) ProductImages() ([]ProductImage, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := &map[string][]ProductImage{}
+  r := &map[string][]Metafield{}
   err = json.NewDecoder(res).Decode(r)
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["product_images"]
+  result := (*r)["metafields"]
 
 	if err != nil {
 		return nil, err
@@ -64,8 +75,8 @@ func (api *API) ProductImages() ([]ProductImage, error) {
 
 
 
-func (api *API) ProductImage(id int64) (*ProductImage, error) {
-  endpoint := fmt.Sprintf("/admin/product_images/%d.json", id)
+func (api *API) Metafield(id int64) (*Metafield, error) {
+  endpoint := fmt.Sprintf("/admin/metafields/%d.json", id)
 
   res, status, err := api.request(endpoint, "GET", nil, nil)
 
@@ -77,12 +88,12 @@ func (api *API) ProductImage(id int64) (*ProductImage, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := map[string]ProductImage{}
+  r := map[string]Metafield{}
   err = json.NewDecoder(res).Decode(&r)
 
   fmt.Printf("things are: %v\n\n", r)
 
-  result := r["product_image"]
+  result := r["metafield"]
 
 	if err != nil {
 		return nil, err
@@ -94,24 +105,24 @@ func (api *API) ProductImage(id int64) (*ProductImage, error) {
 }
 
 
-func (api *API) NewProductImage() *ProductImage {
-  return &ProductImage{api: api}
+func (api *API) NewMetafield() *Metafield {
+  return &Metafield{api: api}
 }
 
 
-func (obj *ProductImage) Save() (error) {
-  endpoint := fmt.Sprintf("/admin/product_images/%d.json", obj.Id)
+func (obj *Metafield) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/metafields/%d.json", obj.Id)
   method := "PUT"
   expectedStatus := 201
 
   if obj.Id == 0 {
-    endpoint = fmt.Sprintf("/admin/product_images.json")
+    endpoint = fmt.Sprintf("/admin/metafields.json")
     method = "POST"
     expectedStatus = 201
   }
 
-  body := map[string]*ProductImage{}
-  body["product_image"] = obj
+  body := map[string]*Metafield{}
+  body["metafield"] = obj
 
   buf := &bytes.Buffer{}
   err := json.NewEncoder(buf).Encode(body)
@@ -136,7 +147,7 @@ func (obj *ProductImage) Save() (error) {
     }
   }
 
-  r := map[string]ProductImage{}
+  r := map[string]Metafield{}
   err = json.NewDecoder(res).Decode(&r)
 
 	if err != nil {
@@ -145,7 +156,7 @@ func (obj *ProductImage) Save() (error) {
 
   fmt.Printf("things are: %v\n\n", r)
 
-  *obj = r["product_image"]
+  *obj = r["metafield"]
 
   fmt.Printf("things are: %v\n\n", res)
 

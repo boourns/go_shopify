@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -10,9 +11,8 @@ import (
   
 )
 
+
 type Country struct {
-  
-    CarrierShippingRateProviders []interface{} `json:"carrier_shipping_rate_providers"`
   
     Code string `json:"code"`
   
@@ -20,15 +20,22 @@ type Country struct {
   
     Name string `json:"name"`
   
-    PriceBasedShippingRates []interface{} `json:"price_based_shipping_rates"`
+    Tax float64 `json:"tax"`
+  
+    TaxName string `json:"tax_name"`
   
     Provinces []interface{} `json:"provinces"`
   
-    Tax float64 `json:"tax"`
+    WeightBasedShippingRates []WeightBasedShippingRate `json:"weight_based_shipping_rates"`
   
-    WeightBasedShippingRates []interface{} `json:"weight_based_shipping_rates"`
+    PriceBasedShippingRates []interface{} `json:"price_based_shipping_rates"`
   
-  api *API
+    CarrierShippingRateProviders []interface{} `json:"carrier_shipping_rate_providers"`
+  
+
+  
+    api *API
+  
 }
 
 

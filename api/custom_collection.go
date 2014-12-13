@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,19 +13,14 @@ import (
   
 )
 
+
 type CustomCollection struct {
   
     BodyHtml string `json:"body_html"`
   
     Handle string `json:"handle"`
   
-    Image string `json:"image"`
-  
     Id int64 `json:"id"`
-  
-    Metafield string `json:"metafield"`
-  
-    Published string `json:"published"`
   
     PublishedAt time.Time `json:"published_at"`
   
@@ -38,7 +34,10 @@ type CustomCollection struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+
+  
+    api *API
+  
 }
 
 

@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -11,6 +12,7 @@ import (
     "time"
   
 )
+
 
 type Article struct {
   
@@ -24,15 +26,9 @@ type Article struct {
   
     Id int64 `json:"id"`
   
-    Metafield string `json:"metafield"`
-  
-    Published string `json:"published"`
-  
     PublishedAt time.Time `json:"published_at"`
   
     SummaryHtml string `json:"summary_html"`
-  
-    Tags string `json:"tags"`
   
     TemplateSuffix string `json:"template_suffix"`
   
@@ -42,7 +38,12 @@ type Article struct {
   
     UserId int64 `json:"user_id"`
   
-  api *API
+    Tags string `json:"tags"`
+  
+
+  
+    api *API
+  
 }
 
 

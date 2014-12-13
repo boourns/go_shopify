@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,6 +13,7 @@ import (
   
 )
 
+
 type Theme struct {
   
     CreatedAt time.Time `json:"created_at"`
@@ -22,13 +24,18 @@ type Theme struct {
   
     Role string `json:"role"`
   
+    ThemeStoreId string `json:"theme_store_id"`
+  
     UpdatedAt time.Time `json:"updated_at"`
   
-    Previewable string `json:"previewable"`
+    Previewable bool `json:"previewable"`
   
-    Processing string `json:"processing"`
+    Processing bool `json:"processing"`
   
-  api *API
+
+  
+    api *API
+  
 }
 
 

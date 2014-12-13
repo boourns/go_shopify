@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "encoding/json"
@@ -10,33 +11,45 @@ import (
   
 )
 
+
 type Location struct {
-  
-    Id int64 `json:"id"`
-  
-    Name string `json:"name"`
-  
-    LocationType string `json:"location_type"`
   
     Address1 string `json:"address1"`
   
     Address2 string `json:"address2"`
   
-    Zip string `json:"zip"`
-  
     City string `json:"city"`
-  
-    Province string `json:"province"`
   
     Country string `json:"country"`
   
+    CreatedAt time.Time `json:"created_at"`
+  
+    DeletedAt string `json:"deleted_at"`
+  
+    Id int64 `json:"id"`
+  
+    LocationType string `json:"location_type"`
+  
+    Name string `json:"name"`
+  
     Phone string `json:"phone"`
   
-    CreatedAt time.Time `json:"created_at"`
+    Province string `json:"province"`
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    Zip string `json:"zip"`
+  
+    CountryCode string `json:"country_code"`
+  
+    CountryName string `json:"country_name"`
+  
+    ProvinceCode string `json:"province_code"`
+  
+
+  
+    api *API
+  
 }
 
 

@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "encoding/json"
@@ -9,6 +10,7 @@ import (
     "time"
   
 )
+
 
 type Event struct {
   
@@ -20,19 +22,24 @@ type Event struct {
   
     Id int64 `json:"id"`
   
-    Description string `json:"description"`
-  
-    Path string `json:"path"`
-  
-    Message string `json:"message"`
-  
     SubjectId int64 `json:"subject_id"`
   
     SubjectType string `json:"subject_type"`
   
     Verb string `json:"verb"`
   
-  api *API
+    Message string `json:"message"`
+  
+    Author string `json:"author"`
+  
+    Description string `json:"description"`
+  
+    Path string `json:"path"`
+  
+
+  
+    api *API
+  
 }
 
 

@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "encoding/json"
@@ -10,13 +11,14 @@ import (
   
 )
 
+
 type Collect struct {
   
     CollectionId int64 `json:"collection_id"`
   
     CreatedAt time.Time `json:"created_at"`
   
-    Featured string `json:"featured"`
+    Featured bool `json:"featured"`
   
     Id int64 `json:"id"`
   
@@ -24,11 +26,14 @@ type Collect struct {
   
     ProductId int64 `json:"product_id"`
   
-    SortValue string `json:"sort_value"`
-  
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    SortValue string `json:"sort_value"`
+  
+
+  
+    api *API
+  
 }
 
 

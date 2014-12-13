@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -11,6 +12,7 @@ import (
     "time"
   
 )
+
 
 type Page struct {
   
@@ -24,8 +26,6 @@ type Page struct {
   
     Id int64 `json:"id"`
   
-    Metafield string `json:"metafield"`
-  
     PublishedAt time.Time `json:"published_at"`
   
     ShopId int64 `json:"shop_id"`
@@ -36,7 +36,10 @@ type Page struct {
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+
+  
+    api *API
+  
 }
 
 

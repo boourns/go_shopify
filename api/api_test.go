@@ -54,7 +54,7 @@ func TestCreateWebhook(t *testing.T) {
 
 	webhook := api.NewWebhook()
 
-	webhook.Address = "https://102ee3c5.ngrok.com/service/hook"
+	webhook.Address = "https://aaa.ngrok.com/service/hook"
 	webhook.Format = "json"
 	webhook.Topic = "orders/delete"
 	err = webhook.Save()

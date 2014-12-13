@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,24 +13,40 @@ import (
   
 )
 
-type CustomerGroup struct {
+
+type SmartCollection struct {
   
-    CreatedAt time.Time `json:"created_at"`
+    BodyHtml string `json:"body_html"`
+  
+    Disjunctive bool `json:"disjunctive"`
+  
+    Handle string `json:"handle"`
   
     Id int64 `json:"id"`
   
-    Name time.Time `json:"name"`
+    PublishedAt time.Time `json:"published_at"`
   
-    Query time.Time `json:"query"`
+    PublishedScope string `json:"published_scope"`
+  
+    SortOrder string `json:"sort_order"`
+  
+    TemplateSuffix string `json:"template_suffix"`
+  
+    Title string `json:"title"`
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    Rules []Rule `json:"rules"`
+  
+
+  
+    api *API
+  
 }
 
 
-func (api *API) CustomerGroups() ([]CustomerGroup, error) {
-  res, status, err := api.request("/admin/customer_groups.json", "GET", nil, nil)
+func (api *API) SmartCollections() ([]SmartCollection, error) {
+  res, status, err := api.request("/admin/smart_collections.json", "GET", nil, nil)
 
   if err != nil {
     return nil, err
@@ -39,12 +56,12 @@ func (api *API) CustomerGroups() ([]CustomerGroup, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := &map[string][]CustomerGroup{}
+  r := &map[string][]SmartCollection{}
   err = json.NewDecoder(res).Decode(r)
 
   fmt.Printf("things are: %v\n\n", *r)
 
-  result := (*r)["customer_groups"]
+  result := (*r)["smart_collections"]
 
 	if err != nil {
 		return nil, err
@@ -60,8 +77,8 @@ func (api *API) CustomerGroups() ([]CustomerGroup, error) {
 
 
 
-func (api *API) CustomerGroup(id int64) (*CustomerGroup, error) {
-  endpoint := fmt.Sprintf("/admin/customer_groups/%d.json", id)
+func (api *API) SmartCollection(id int64) (*SmartCollection, error) {
+  endpoint := fmt.Sprintf("/admin/smart_collections/%d.json", id)
 
   res, status, err := api.request(endpoint, "GET", nil, nil)
 
@@ -73,12 +90,12 @@ func (api *API) CustomerGroup(id int64) (*CustomerGroup, error) {
     return nil, fmt.Errorf("Status returned: %d", status)
   }
 
-  r := map[string]CustomerGroup{}
+  r := map[string]SmartCollection{}
   err = json.NewDecoder(res).Decode(&r)
 
   fmt.Printf("things are: %v\n\n", r)
 
-  result := r["customer_group"]
+  result := r["smart_collection"]
 
 	if err != nil {
 		return nil, err
@@ -90,26 +107,24 @@ func (api *API) CustomerGroup(id int64) (*CustomerGroup, error) {
 }
 
 
-
-
-func (api *API) NewCustomerGroup() *CustomerGroup {
-  return &CustomerGroup{api: api}
+func (api *API) NewSmartCollection() *SmartCollection {
+  return &SmartCollection{api: api}
 }
 
 
-func (obj *CustomerGroup) Save() (error) {
-  endpoint := fmt.Sprintf("/admin/customer_groups/%d.json", obj.Id)
+func (obj *SmartCollection) Save() (error) {
+  endpoint := fmt.Sprintf("/admin/smart_collections/%d.json", obj.Id)
   method := "PUT"
   expectedStatus := 201
 
   if obj.Id == 0 {
-    endpoint = fmt.Sprintf("/admin/customer_groups.json")
+    endpoint = fmt.Sprintf("/admin/smart_collections.json")
     method = "POST"
     expectedStatus = 201
   }
 
-  body := map[string]*CustomerGroup{}
-  body["customer_group"] = obj
+  body := map[string]*SmartCollection{}
+  body["smart_collection"] = obj
 
   buf := &bytes.Buffer{}
   err := json.NewEncoder(buf).Encode(body)
@@ -134,7 +149,7 @@ func (obj *CustomerGroup) Save() (error) {
     }
   }
 
-  r := map[string]CustomerGroup{}
+  r := map[string]SmartCollection{}
   err = json.NewDecoder(res).Decode(&r)
 
 	if err != nil {
@@ -143,12 +158,14 @@ func (obj *CustomerGroup) Save() (error) {
 
   fmt.Printf("things are: %v\n\n", r)
 
-  *obj = r["customer_group"]
+  *obj = r["smart_collection"]
 
   fmt.Printf("things are: %v\n\n", res)
 
   return nil
 }
+
+
 
 
 

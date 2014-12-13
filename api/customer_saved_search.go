@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -12,6 +13,7 @@ import (
   
 )
 
+
 type CustomerSavedSearch struct {
   
     CreatedAt time.Time `json:"created_at"`
@@ -20,11 +22,14 @@ type CustomerSavedSearch struct {
   
     Name time.Time `json:"name"`
   
-    Query time.Time `json:"query"`
-  
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    Query time.Time `json:"query"`
+  
+
+  
+    api *API
+  
 }
 
 

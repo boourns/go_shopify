@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -11,6 +12,7 @@ import (
     "time"
   
 )
+
 
 type Blog struct {
   
@@ -26,17 +28,18 @@ type Blog struct {
   
     Id int64 `json:"id"`
   
-    Metafield string `json:"metafield"`
-  
-    Tags string `json:"tags"`
-  
     TemplateSuffix string `json:"template_suffix"`
   
     Title string `json:"title"`
   
     UpdatedAt time.Time `json:"updated_at"`
   
-  api *API
+    Tags string `json:"tags"`
+  
+
+  
+    api *API
+  
 }
 
 

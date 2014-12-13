@@ -1,5 +1,6 @@
 package shopify
 
+
 import (
   
     "bytes"
@@ -10,6 +11,7 @@ import (
   
 )
 
+
 type Redirect struct {
   
     Id int64 `json:"id"`
@@ -18,7 +20,10 @@ type Redirect struct {
   
     Target string `json:"target"`
   
-  api *API
+
+  
+    api *API
+  
 }
 
 
