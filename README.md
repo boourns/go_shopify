@@ -40,6 +40,9 @@ if err != nil {
 fmt.Printf("New product ID is: %d\n", product.Id)  
 ```
 
+__App example__
+See https://github.com/boourns/go_shopify/blob/master/example/main.go for an example Shopify application that handles oauth install flow, can serve admin and storefront proxy requests.
+
 Done
 ====
 - App install flow (see example/main.go)
