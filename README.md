@@ -49,4 +49,4 @@ Done
 
 TODO
 ====
-- API client
+- API client doesn't support all endpoints, or all actions, yet.
