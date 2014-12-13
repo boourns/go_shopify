@@ -9,15 +9,22 @@ API Examples
 __Initialize an api client and fetch products__
 
 ```go
-api = shopify.API{
-  URI: "https://shopname.myshopify.com/admin",
-  Token: "(api client token)",
-  Secret: "(api client secret for this shop)",
-}
 
-products := api.Products()
-// or
-product := api.Product(12345)
+import (
+  "github.com/boourns/go_shopify"
+)
+
+func main() {
+  api = shopify.API{
+    URI: "https://shopname.myshopify.com/admin",
+    Token: "(api client token)",
+    Secret: "(api client secret for this shop)",
+  }
+
+  products := api.Products()
+  // or
+  product := api.Product(12345)
+}
 ```
 
 __ Create a new Product__
