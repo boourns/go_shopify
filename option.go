@@ -12,7 +12,7 @@ type Option struct {
   
     ProductId int64 `json:"product_id"`
   
-
+    Values []string `json:"values"` 
   
 }
 
